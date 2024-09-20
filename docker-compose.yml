@@ -1,6 +1,6 @@
 services:
-  php-fpm:
-    container_name: php-fpm
+  octane:
+    container_name: octane
     build:
       context: .
       dockerfile: Dockerfile.app
@@ -9,9 +9,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - .:/var/www/laravel-app
-      - ./vendor:/var/www/laravel-app/vendor
-    working_dir: /var/www/laravel-app
+      - .:/srv/gamewatch
+      - ./vendor:/srv/gamewatch/vendor
+    working_dir: /srv/gamewatch
     depends_on:
       mysql:
         condition: service_healthy
@@ -24,11 +24,11 @@ services:
       context: .
       dockerfile: Dockerfile.nginx
     environment:
-      - PHP_UPSTREAM_HOST=php-fpm
+      - PHP_UPSTREAM_HOST=octane
     ports:
       - '80:80'
     depends_on:
-      - php-fpm
+      - octane
     networks:
       - bridge
 

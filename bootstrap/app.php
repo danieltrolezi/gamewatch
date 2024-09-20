@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\CheckScopesMiddleware;
+use App\Http\Middleware\VerifyDiscordSignature;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,7 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'scopes'       => CheckScopesMiddleware::class,
+            'discord.sign' => VerifyDiscordSignature::class
+        ]);
+
+        $middleware->redirectGuestsTo(fn() => response());
+        
+        $middleware->throttleWithRedis();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
@@ -42,6 +51,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 }
 
                 return response()->json($response, $e->getStatusCode());
-            }            
+            }
         });
     })->create();

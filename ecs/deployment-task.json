@@ -4,25 +4,19 @@
   "networkMode": "bridge",
   "containerDefinitions": [
     {
-      "name": "php-fpm",
-      "image": "<IMAGE_PHP_FPM>",
+      "name": "octane",
+      "image": "<IMAGE_OCTANE>",
       "essential": true,
       "portMappings": [
         {
-          "containerPort": 9000,
+          "containerPort": 8000,
           "protocol": "tcp"
-        }
-      ],
-      "dependsOn": [
-        {
-          "containerName": "mysql",
-          "condition": "HEALTHY"
         }
       ],
       "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "supervisorctl status php-fpm | grep RUNNING || exit 1"
+          "curl -f http://localhost:8000/up || exit 1"
         ],
         "interval": 30,
         "timeout": 10,
@@ -32,13 +26,17 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/laravel-app",
+          "awslogs-group": "/ecs/gamewatch",
           "awslogs-region": "us-east-2",
-          "awslogs-stream-prefix": "php-fpm",
+          "awslogs-stream-prefix": "octane",
           "awslogs-create-group": "true"
         }
       },
       "secrets": [
+        {
+          "name": "RUN_MODE",
+          "valueFrom": "<SSM_NAMESPACE>/RUN_MODE"
+        },
         {
           "name": "APP_NAME",
           "valueFrom": "<SSM_NAMESPACE>/APP_DEBUG"
@@ -94,7 +92,47 @@
         {
           "name": "REDIS_PASSWORD",
           "valueFrom": "<SSM_NAMESPACE>/REDIS_PASSWORD"
-        }
+        },
+        {
+          "name": "RAWG_API_KEY",
+          "valueFrom": "<SSM_NAMESPACE>/RAWG_API_KEY"
+        },
+        {
+          "name": "RAWG_API_HOST",
+          "valueFrom": "<SSM_NAMESPACE>/RAWG_API_HOST"
+        },
+        {
+          "name": "JWT_EXPIRES",
+          "valueFrom": "<SSM_NAMESPACE>/JWT_EXPIRES"
+        },
+        {
+          "name": "DISCORD_APP_ID",
+          "valueFrom": "<SSM_NAMESPACE>/DISCORD_APP_ID"
+        },
+        {
+          "name": "DISCORD_PUBLIC_KEY",
+          "valueFrom": "<SSM_NAMESPACE>/DISCORD_PUBLIC_KEY"
+        },
+        {
+          "name": "DISCORD_BOT_TOKEN",
+          "valueFrom": "<SSM_NAMESPACE>/DISCORD_BOT_TOKEN"
+        },
+        {
+          "name": "DISCORD_API_HOST",
+          "valueFrom": "<SSM_NAMESPACE>/DISCORD_API_HOST"
+        },
+        {
+          "name": "ROOT_DISCORD_USER_ID",
+          "valueFrom": "<SSM_NAMESPACE>/ROOT_DISCORD_USER_ID"
+        },
+        {
+          "name": "ROOT_DISCORD_USERNAME",
+          "valueFrom": "<SSM_NAMESPACE>/ROOT_DISCORD_USERNAME"
+        },
+        {
+          "name": "ROOT_DISCORD_CHANNEL_ID",
+          "valueFrom": "<SSM_NAMESPACE>/ROOT_DISCORD_CHANNEL_ID"
+        },
       ]
     },
     {
@@ -110,7 +148,7 @@
       ],
       "dependsOn": [
         {
-          "containerName": "php-fpm",
+          "containerName": "octane",
           "condition": "HEALTHY"
         }
       ],
@@ -133,7 +171,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/laravel-app",
+          "awslogs-group": "/ecs/gamewatch",
           "awslogs-region": "us-east-2",
           "awslogs-stream-prefix": "nginx",
           "awslogs-create-group": "true"

@@ -1,9 +1,14 @@
 #!/bin/bash
 
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | xargs)
+fi
+
 if [ ! -d "vendor" ] || [ -z "$(ls -A vendor)" ]; then
     if [ "$APP_ENV" == "local" ]; then
         composer install --no-interaction
         composer dump-autoload
+        npm install
 
         php artisan key:generate --ansi
     else
@@ -13,4 +18,19 @@ if [ ! -d "vendor" ] || [ -z "$(ls -A vendor)" ]; then
     php artisan migrate --seed
 fi
 
-supervisord -n -c /etc/supervisor/supervisord.conf
+case "$RUN_MODE" in
+    octane)
+        if [ "$APP_ENV" == "local" ]; then
+            php artisan octane:swoole --host=0.0.0.0 --watch 
+        else
+            php artisan octane:swoole --host=0.0.0.0 --workers=4 --task-workers=4
+        fi
+        ;;
+    notif)
+        php artisan app:dispatch-notifications
+        ;;
+    *)
+        echo "Invalid RUN_MODE. Please set it to 'octane' or 'notif'."
+        exit 1
+        ;;
+esac

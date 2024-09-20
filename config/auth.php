@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        'guard' => env('AUTH_GUARD', 'api'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -38,6 +38,10 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'api' => [
+            'driver' => 'jwt',
             'provider' => 'users',
         ],
     ],
@@ -111,5 +115,32 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
+    /*
+    |--------------------------------------------------------------------------
+    | JWT
+    |--------------------------------------------------------------------------
+    |
+    */
+    'jwt' => [
+        'algorithm'  => env('JWT_ALGORITHM', 'HS256'),
+        'expires'    => env('JWT_EXPIRES', true),
+        'ttl'        => env('JWT_TTL', 3600),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Root User
+    |--------------------------------------------------------------------------
+    |
+    */
+    'root' => [
+        'name'               => env('ROOT_NAME', 'root'),
+        'email'              => env('ROOT_EMAIL', 'root@localhost'),
+        'password'           => env('ROOT_PASSWORD', 'secret'),
+        'discord_user_id'    => env('ROOT_DISCORD_USER_ID'),
+        'discord_username'   => env('ROOT_DISCORD_USERNAME'),
+        'discord_channel_id' => env('ROOT_DISCORD_CHANNEL_ID'),
+    ]
 
 ];

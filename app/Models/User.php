@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema()]
 class User extends Authenticatable
 {
+    use HasApiTokens;
     use HasFactory;
     use Notifiable;
 
@@ -30,8 +35,30 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'discord_user_id',
+        'discord_channel_id'
     ];
+
+    /**
+     * @var array
+     */
+    protected $with = [
+        'settings'
+    ];
+
+    #[OA\Property(property: 'id', type: 'integer')]
+    #[OA\Property(property: 'name', type: 'string')]
+    #[OA\Property(property: 'email', type: 'string')]
+    #[OA\Property(property: 'discord_user_id', type: 'string')]
+    #[OA\Property(property: 'discord_username', type: 'string')]
+    #[OA\Property(property: 'discord_channel_id', type: 'string')]
+    #[OA\Property(property: 'created_at', type: 'datetime')]
+    #[OA\Property(property: 'updated_at', type: 'datetime')]
+    #[OA\Property(property: 'settings', ref: '#/components/schemas/UserSetting')]
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -41,8 +68,24 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'scopes'   => 'array'
         ];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isRoot(): bool
+    {
+        return in_array(Scope::Root->value, $this->scopes);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function settings(): HasOne
+    {
+        return $this->hasOne(UserSetting::class);
     }
 }
