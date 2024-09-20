@@ -140,7 +140,7 @@
         {
           "name": "ROOT_DISCORD_CHANNEL_ID",
           "valueFrom": "<SSM_NAMESPACE>/ROOT_DISCORD_CHANNEL_ID"
-        },
+        }
       ]
     },
     {
