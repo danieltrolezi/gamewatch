@@ -90,10 +90,6 @@
           "valueFrom": "<SSM_NAMESPACE>/REDIS_HOST"
         },
         {
-          "name": "REDIS_PASSWORD",
-          "valueFrom": "<SSM_NAMESPACE>/REDIS_PASSWORD"
-        },
-        {
           "name": "RAWG_API_KEY",
           "valueFrom": "<SSM_NAMESPACE>/RAWG_API_KEY"
         },
