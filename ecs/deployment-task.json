@@ -122,6 +122,18 @@
           "valueFrom": "<SSM_NAMESPACE>/DISCORD_API_HOST"
         },
         {
+          "name": "ROOT_NAME",
+          "valueFrom": "<SSM_NAMESPACE>/ROOT_NAME"
+        },
+        {
+          "name": "ROOT_EMAIL",
+          "valueFrom": "<SSM_NAMESPACE>/ROOT_EMAIL"
+        },
+        {
+          "name": "ROOT_PASSWORD",
+          "valueFrom": "<SSM_NAMESPACE>/ROOT_PASSWORD"
+        },
+        {
           "name": "ROOT_DISCORD_USER_ID",
           "valueFrom": "<SSM_NAMESPACE>/ROOT_DISCORD_USER_ID"
         },

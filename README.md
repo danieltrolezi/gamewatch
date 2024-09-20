@@ -1,7 +1,7 @@
-![version](https://img.shields.io/badge/version-0.9.0-blue?style=flat)
+![version](https://img.shields.io/badge/version-1.0.0-blue?style=flat)
 [![build](https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml.yml)
 
-## GameWatch
+## :diamonds: GameWatch
 
 GameWatch makes it easy to track upcoming game releases.  
 
