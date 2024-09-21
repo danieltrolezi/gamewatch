@@ -23,7 +23,7 @@ case "$RUN_MODE" in
         if [ "$APP_ENV" == "local" ]; then
             php artisan octane:swoole --host=0.0.0.0 --watch 
         else
-            php artisan octane:swoole --workers=4 --task-workers=4
+            php artisan octane:swoole --host=0.0.0.0 --workers=4 --task-workers=4
         fi
         ;;
     notif)
