@@ -23,16 +23,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ vars.AWS_REGION }}
 
+    - name: Login to Amazon ECR
+      run: |
+        aws ecr get-login-password --region ${{ vars.AWS_REGION }} \
+        | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+
     - name: Build Docker image (Octane)
       run: docker build . --file Dockerfile.app --tag ${{ vars.DOCKER_IMAGE_TAG }}/octane
 
     - name: Build Docker image (Nginx)
       run: docker build . --file Dockerfile.nginx --tag ${{ vars.DOCKER_IMAGE_TAG }}/nginx
-
-    - name: Login to Amazon ECR
-      run: |
-        aws ecr get-login-password --region ${{ vars.AWS_REGION }} \
-        | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
 
     - name: Tag Docker images
       run: |
