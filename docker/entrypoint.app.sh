@@ -11,11 +11,10 @@ if [ ! -d "vendor" ] || [ -z "$(ls -A vendor)" ]; then
         npm install
 
         php artisan key:generate --ansi
+        php artisan migrate --seed
     else
         composer install --no-interaction --optimize-autoloader --no-dev      
-    fi
-
-    php artisan migrate --seed
+    fi    
 fi
 
 case "$RUN_MODE" in
