@@ -4,6 +4,7 @@ use App\Enums\Period;
 use App\Enums\Rawg\RawgGenre;
 use App\Enums\Scope;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\RedisController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DiscordController;
 use App\Http\Controllers\RawgGamesController;
@@ -34,6 +35,13 @@ Route::middleware('throttle:api')->group(function () {
 
         Route::middleware('scopes:' . Scope::Root->value)->group(function () {
             Route::post('/account/register', [AccountController::class, 'register']);
+
+            Route::prefix('admin')
+                ->group(function () {
+                    Route::prefix('redis')->controller(RedisController::class)->group(function() {
+                        Route::get('/keys', 'keys');
+                    });
+                });
             
             Route::prefix('rawg')
                 ->group(function () {

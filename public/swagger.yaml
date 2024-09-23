@@ -117,6 +117,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  /api/admin/redis/keys:
+    get:
+      tags:
+        - admin
+      operationId: 519129f3cdf7eea66301bd70ced39c8c
+      responses:
+        '200':
+          description: 'List of Redis keys and values'
   /api/auth/login:
     post:
       tags:
@@ -606,6 +614,9 @@ tags:
   -
     name: application
     description: 'health and other application routes'
+  -
+    name: admin
+    description: 'admin panel routes'
   -
     name: domain
     description: 'rawg domain routes'

@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $env = match (config('app.url')) {
             'http://gamewatch.local' => 'local',
-            default                  => 'prod'
+            default                  => 'production'
         };
 
         Health::checks([

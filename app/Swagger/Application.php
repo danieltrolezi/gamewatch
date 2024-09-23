@@ -25,6 +25,10 @@ class Application
         description: 'health and other application routes'
     )]
     #[OA\Tag(
+        name: 'admin',
+        description: 'admin panel routes'
+    )]
+    #[OA\Tag(
         name: 'domain',
         description: 'rawg domain routes'
     )]

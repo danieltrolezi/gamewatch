@@ -3,6 +3,7 @@
 namespace App\Services\Rawg;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 abstract class RawgBaseService
@@ -69,7 +70,13 @@ abstract class RawgBaseService
     private function setCacheContents(string $uri, array $data, string $contents): void
     {
         $key = $this->getCacheKey($uri, $data['query']);
-        Redis::setEx($key, self::CACHE_TTL, $contents);
+        $result = Redis::setEx($key, self::CACHE_TTL, $contents);
+
+        Log::debug(sprintf(
+            'Redis cache set [key: %s, result: %s]',
+            $key,
+            $result
+        ));
     }
 
     /**
