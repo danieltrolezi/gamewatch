@@ -33,7 +33,7 @@
         },
         {
           "name": "APP_NAME",
-          "valueFrom": "<SSM_NAMESPACE>/APP_DEBUG"
+          "valueFrom": "<SSM_NAMESPACE>/APP_NAME"
         },
         {
           "name": "APP_VERSION",

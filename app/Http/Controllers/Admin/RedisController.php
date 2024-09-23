@@ -18,13 +18,12 @@ class RedisController extends Controller
     )]
     public function keys(): JsonResponse
     {
-        $redis = Redis::connection(config('database.redis.connection'));
         $prefix = config('database.redis.options.prefix');
-        $keys = $redis->keys('*');
+        $keys = Redis::keys('*');
         $data = [];
 
         foreach ($keys as $key) {
-            $value = $redis->get(
+            $value = Redis::get(
                 str_replace($prefix, '', $key)
             );
 
