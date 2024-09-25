@@ -3,10 +3,47 @@
 
 ## :diamonds: GameWatch
 
-GameWatch makes it easy to track upcoming game releases.  
+GameWatch is a [Discord](https://discord.com/) bot that makes it easy to track upcoming game releases.
 
-Customize your notifications by selecting your preferred platforms and genres, 
-set your frequency, and never miss a game launch again!
+Customize your notifications by selecting your preferred platforms and genres, set your frequency, and never miss a game launch again!
+
+<!-- Update the path to match the image's location in your repo -->
+
+### :video_game: Features
+
+* Track game releases across platforms (PC, PlayStation, Xbox, Switch and others)
+* Set up notifications for your favorite genres
+* Choose notification frequency (none, weekly, monthly)
+
+### :gear: Installation
+
+####  Add GameWatch to your Discord server
+* [Click here]() to invite GameWatch to your server.
+* After adding the bot, type `/` to see the list of commands and how to customize your game notifications.
+
+
+#### Commands
+
+1. Set your preferences
+```
+/settings
+```
+
+2. List upcoming game releases
+```
+/releases {period}
+```
+> If no period is provided, your preferences are used as default.
+
+3. Clear Bot messages
+```
+/clear
+```
+
+4. Show help message
+```
+/help
+```
 
 ## License
 
