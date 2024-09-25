@@ -1,10 +1,15 @@
 <p align='center'>
-  <img src="./storage/assets/gamewatch.jpg" height="250"/>
+  <img src="./storage/assets/gamewatch.jpg" height="150"/>
+  <img src="./storage/assets/discord.png" height="150"/>
 </p>
 
 <p align='center'>
-![version](https://img.shields.io/badge/version-1.0.0-blue?style=flat)
-[![build](https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml.yml)
+    <a href="https://github.com/danieltrolezi/gamewatch/releases">
+        <img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat" />
+    </a>
+    <a href="https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml.yml">
+        <img src="https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml/badge.svg" />
+    </a>
 </p>
 
 ## :diamonds: GameWatch
