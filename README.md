@@ -1,13 +1,17 @@
+<p align='center'>
+  <img src="./storage/assets/gamewatch.jpg" height="250"/>
+</p>
+
+<p align='center'>
 ![version](https://img.shields.io/badge/version-1.0.0-blue?style=flat)
 [![build](https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml.yml)
+</p>
 
 ## :diamonds: GameWatch
 
 GameWatch is a [Discord](https://discord.com/) bot that makes it easy to track upcoming game releases.
 
 Customize your notifications by selecting your preferred platforms and genres, set your frequency, and never miss a game launch again!
-
-<!-- Update the path to match the image's location in your repo -->
 
 ### :video_game: Features
 
