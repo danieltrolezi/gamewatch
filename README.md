@@ -7,7 +7,7 @@
     <a href="https://github.com/danieltrolezi/gamewatch/releases">
         <img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat" />
     </a>
-    <a href="https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml.yml">
+    <a href="https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml">
         <img src="https://github.com/danieltrolezi/gamewatch/actions/workflows/ci-cd.yml/badge.svg" />
     </a>
 </p>
