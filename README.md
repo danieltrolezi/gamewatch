@@ -27,7 +27,7 @@ Customize your notifications by selecting your preferred platforms and genres, s
 ### :gear: Installation
 
 ####  Add GameWatch to your Discord server
-* [Click here]() to invite GameWatch to your server.
+* [Click here](https://discord.com/oauth2/authorize?client_id=1280568915956863008) to invite GameWatch to your server.
 * After adding the bot, type `/` to see the list of commands and how to customize your game notifications.
 
 
