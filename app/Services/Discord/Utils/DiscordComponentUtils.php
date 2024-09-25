@@ -13,17 +13,21 @@ trait DiscordComponentUtils
     use DiscordCallbackUtils;
 
     private const string COMPONENT_GAMES_FOUND = 'games-fround';
-    private const string COMPONENT_CURRENT_PAGE = 'current-page-';
+    private const string COMPONENT_CURRENT_PAGE = 'current-page';
     private const string COMPONENT_NEXT_PAGE = 'next-page';
     private const string COMPONENT_PREV_PAGE = 'previous-page';
 
-    private function makeCustomId(string $componentName): string
+    private function makeCustomId(string $componentName, array $args = []): string
     {
         if (!$this instanceof CallbackCommandInterface) {
             throw new \Exception('Command does not implements CallbackCommandInterface.');
         }
 
-        return $this->formatCustomId($this->getCommandName(), $componentName);
+        return $this->formatCustomId(
+            $this->getCommandName(),
+            $componentName,
+            $args
+        );
     }
 
     /**
@@ -99,11 +103,12 @@ trait DiscordComponentUtils
         string $name,
         ButtonStyle $style = ButtonStyle::Primary,
         bool $disabled = false,
-        string $emoji = ''
+        string $emoji = '',
+        array $args = []
     ): array {
         $button = [
             'type'        => ComponentType::Button,
-            'custom_id'   => $this->makeCustomId($name),
+            'custom_id'   => $this->makeCustomId($name, $args),
             'label'       => strtoupper($label),
             'style'       => $style,
             'disabled'    => $disabled
@@ -122,8 +127,10 @@ trait DiscordComponentUtils
      * @param PaginatedResponse $response
      * @return array
      */
-    private function makePaginationComponents(PaginatedResponse $response): array
-    {
+    private function makePaginationComponents(
+        PaginatedResponse $response,
+        array $args = []
+    ): array {
         return [
             $this->makeButtonComponent(
                 name: self::COMPONENT_GAMES_FOUND,
@@ -133,7 +140,7 @@ trait DiscordComponentUtils
                 emoji: '🔥'
             ),
             $this->makeButtonComponent(
-                name: self::COMPONENT_CURRENT_PAGE . $response->currentPage,
+                name: self::COMPONENT_CURRENT_PAGE,
                 label: sprintf('Page %s of %s', $response->currentPage, $response->lastPage),
                 style: ButtonStyle::Secundary,
                 disabled: true,
@@ -143,11 +150,13 @@ trait DiscordComponentUtils
                 name: self::COMPONENT_PREV_PAGE,
                 label: 'Previous Page',
                 disabled: $response->currentPage === 1,
+                args: array_merge($args, ['page' => $response->currentPage - 1])
             ),
             $this->makeButtonComponent(
                 name: self::COMPONENT_NEXT_PAGE,
                 label: 'Next Page',
                 disabled: $response->currentPage === $response->lastPage,
+                args: array_merge($args, ['page' => $response->currentPage + 1])
             )
         ];
     }

@@ -10,17 +10,22 @@ trait DiscordCallbackUtils
      * @param string $name
      * @return string
      */
-    private function formatCustomId(string $commandName, string $componentName): string
-    {
-        if (strpos($commandName, '_') !== false) {
-            throw new \Exception('Command name can not contain underscores.');
+    private function formatCustomId(
+        string $commandName,
+        string $componentName,
+        array $args = []
+    ): string {
+        if (strpos($commandName, '|') !== false) {
+            throw new \Exception('Command name can not contain pipelines.');
         }
 
-        if (strpos($componentName, '_') !== false) {
-            throw new \Exception('Component name can not contain underscores.');
+        if (strpos($componentName, '|') !== false) {
+            throw new \Exception('Component name can not contain pipelines.');
         }
 
-        return sprintf('%s_%s_%s', $commandName, $componentName, uniqid());
+        $args = http_build_query($args);
+
+        return sprintf('%s|%s|%s|%s', $commandName, $componentName, $args, uniqid());
     }
 
     /**
@@ -32,14 +37,17 @@ trait DiscordCallbackUtils
         string $path = 'data.custom_id'
     ): array {
         $customId = explode(
-            '_',
+            '|',
             Arr::get($payload, $path)
         );
+
+        parse_str($customId[2], $args);
 
         return [
             'command'   => $customId[0],
             'component' => $customId[1],
-            'uid'       => $customId[2],
+            'args'      => $args,
+            'uid'       => $customId[3],
         ];
     }
 }

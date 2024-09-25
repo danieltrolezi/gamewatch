@@ -37,12 +37,14 @@ class ReleasesCommand extends BaseCommand implements CallbackCommandInterface
     public function callback(array $payload): array
     {
         $customId = $this->parseCustomId($payload);
-        $currentPage = $this->getCurrentPage($payload);
+        $args = $customId['args'];
+        $page = $args['page'] ?? 1;
 
-        return match ($customId['component']) {
-            self::COMPONENT_PREV_PAGE => $this->getGameReleases($payload, $currentPage - 1),
-            self::COMPONENT_NEXT_PAGE => $this->getGameReleases($payload, $currentPage + 1),
-        };
+        if (!empty($args['period'])) {
+            Arr::set($payload, 'data.options.0.value', $args['period']);
+        }
+
+        return $this->getGameReleases($payload, $page);
     }
 
     /**
@@ -115,7 +117,9 @@ class ReleasesCommand extends BaseCommand implements CallbackCommandInterface
             'embeds'     => $this->makeGameEmbeds($response),
             'components' => [
                 $this->makeActionRow(
-                    $this->makePaginationComponents($response)
+                    $this->makePaginationComponents($response, [
+                        'period' => $period
+                    ])
                 )
             ]
         ];
