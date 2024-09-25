@@ -8,6 +8,7 @@ use App\Services\Discord\Commands\Contracts\CallbackCommandInterface;
 use App\Services\Discord\Commands\Contracts\CommandInterface;
 use App\Services\Discord\Utils\DiscordCallbackUtils;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -21,6 +22,10 @@ class DiscordInteractionsService extends DiscordBaseService
      */
     public function handleInteractions(array $payload): array
     {
+        if ($payload['type'] !== InteractionType::Ping) {
+            $this->authenticateUser($payload);
+        }
+
         switch ($payload['type']) {
             case InteractionType::Ping:
                 return $this->makeResponse(
@@ -42,6 +47,17 @@ class DiscordInteractionsService extends DiscordBaseService
             default:
                 throw new InvalidArgumentException('Interaction not supported: ' . $payload['type']);
         }
+    }
+
+    /**
+     * @param array $payload
+     * @return void
+     */
+    private function authenticateUser(array $payload): void
+    {
+        Auth::setUser(
+            resolve(DiscordAppService::class)->findOrCreateUser($payload)
+        );
     }
 
     /**

@@ -24,45 +24,59 @@ class DiscordInteractionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = $this->getRulesForInteractionType(
-            InteractionType::from($this->get('type'))
-        );
+        $rules = [
+            'type'             => 'required|integer|in:' . InteractionType::valuesAsString(),
+            'user'             => 'required|array',
+            'user.id'          => 'required|string',
+            'user.username'    => 'required|string',
+            'user.global_name' => 'required|string',
+        ];
 
-        return array_merge([
-            'type'                 => 'required|integer|in:' . InteractionType::valuesAsString(),
-            'data'                 => 'required|array',
-            'data.options'         => 'sometimes|array',
-            'data.options.*'       => 'required|array',
-            'data.options.*.value' => 'required',
-            'user'                 => 'required|array',
-            'user.id'              => 'required|string',
-            'user.username'        => 'required|string',
-            'user.global_name'     => 'required|string',
-            'channel.id'           => 'required|string',
-            'message.components'   => 'sometimes|array'
-        ], $rules);
+        $additionalRules = match ($this->get('type')) {
+            InteractionType::Command->value => $this->getCommandRules(),
+            InteractionType::MessageComponent->value => $this->getMessageComponentRules(),
+            default => []
+        };
+
+        return array_merge($rules, $additionalRules);
     }
 
     /**
-     * @param InteractionType $type
      * @return array
      */
-    private function getRulesForInteractionType(InteractionType $type): array
+    private function getCommandRules(): array
     {
-        return match ($type) {
-            InteractionType::Command => [
-                'data.type' => 'required|int',
-                'data.name' => 'required|string',
-            ],
-            InteractionType::MessageComponent => [
-                'data.component_type'      => 'required|int|in:' . ComponentType::valuesAsString(),
-                'data.custom_id'           => 'required|string',
-                'data.values'              => 'sometimes|array',
-            ],
-            default => []
-        };
+        return [
+            'channel.id'           => 'required|string',
+            'data'                 => 'required|array',
+            'data.type'            => 'required|int',
+            'data.name'            => 'required|string',
+            'data.options'         => 'sometimes|array',
+            'data.options.*'       => 'required|array',
+            'data.options.*.value' => 'required'
+        ];
     }
 
+    /**
+     * @return array
+     */
+    private function getMessageComponentRules(): array
+    {
+        return [
+            'channel.id'          => 'required|string',
+            'data'                => 'required|array',
+            'data.component_type' => 'required|int|in:' . ComponentType::valuesAsString(),
+            'data.custom_id'      => 'required|string',
+            'data.values'         => 'sometimes|array',
+            'message.components'  => 'sometimes|array'
+        ];
+    }
+
+    /**
+     * @param [type] $key
+     * @param [type] $default
+     * @return array
+     */
     #[Override]
     public function validated($key = null, $default = null): array
     {
