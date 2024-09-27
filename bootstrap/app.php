@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -26,6 +27,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->throttleWithRedis();
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->report(function (Exception $e) {
+            Log::error($e->getMessage(), [
+                'exception' => get_class($e),
+                'file'      => $e->getFile(),
+                'line'      => $e->getLine(),
+                'trace'     => $e->getTraceAsString()
+            ]);
+        })->stop();
+
         $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
             if ($request->is('api/*')) {
                 return true;
