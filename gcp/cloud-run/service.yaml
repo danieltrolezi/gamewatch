@@ -5,11 +5,12 @@ metadata:
   namespace: <GCP_PROJECT_ID>
 spec:
   template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: 1
+        autoscaling.knative.dev/maxScale: 2
     spec:
-      minInstances: 1
-      maxInstances: 2
       timeoutSeconds: 120
-      maxConcurrentRequests: 80
       containers:
         - name: octane
           image: <DOCKER_IMAGE_OCTANE>
