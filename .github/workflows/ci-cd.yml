@@ -24,12 +24,12 @@ jobs:
     - name: Set up gcloud CLI
       uses: google-github-actions/setup-gcloud@v1
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        project_id: ${{ vars.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
 
     - name: Configure Docker to use Artifact Registry
-      run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
+      run: gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev
 
     - name: Build Docker image (Octane)
       run: docker build . --file Dockerfile.app --tag octane:latest
@@ -39,13 +39,13 @@ jobs:
 
     - name: Tag Docker images
       run: |
-        docker tag octane:latest ${{ secrets.GCP_AR_REPOSITORY }}/octane:latest
-        docker tag nginx:latest ${{ secrets.GCP_AR_REPOSITORY }}/nginx:latest
+        docker tag octane:latest ${{ vars.GCP_AR_REPOSITORY }}/octane:latest
+        docker tag nginx:latest ${{ vars.GCP_AR_REPOSITORY }}/nginx:latest
 
     - name: Push Docker images to Artifact Registry
       run: |
-        docker push ${{ secrets.GCP_AR_REPOSITORY }}/octane:latest
-        docker push ${{ secrets.GCP_AR_REPOSITORY }}nginx:latest
+        docker push ${{ vars.GCP_AR_REPOSITORY }}/octane:latest
+        docker push ${{ vars.GCP_AR_REPOSITORY }}nginx:latest
 
   cr-service-deploy:
     runs-on: ubuntu-latest
@@ -57,10 +57,10 @@ jobs:
 
     - name: Update Cloud Run Service definition
       run: |
-        sed -i 's|<GCP_PROJECT_ID>|${{ secrets.GCP_PROJECT_ID }}|' ./gcp/cloud-run/service.yaml
-        sed -i 's|<GCP_CLOUD_RUN_SERVICE>|${{ secrets.GCP_CLOUD_RUN_SERVICE }}|' ./gcp/cloud-run/service.yaml
-        sed -i 's|<DOCKER_IMAGE_OCTANE>|${{ secrets.GCP_AR_REPOSITORY }}/octane:latest|' ./gcp/cloud-run/service.yaml
-        sed -i 's|<DOCKER_IMAGE_NGINX>|${{ secrets.GCP_AR_REPOSITORY }}/nginx:latest|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<GCP_PROJECT_ID>|${{ vars.GCP_PROJECT_ID }}|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<GCP_CLOUD_RUN_SERVICE>|${{ vars.GCP_CLOUD_RUN_SERVICE }}|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<DOCKER_IMAGE_OCTANE>|${{ vars.GCP_AR_REPOSITORY }}/octane:latest|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<DOCKER_IMAGE_NGINX>|${{ vars.GCP_AR_REPOSITORY }}/nginx:latest|' ./gcp/cloud-run/service.yaml
     
     - name: Set up Google Cloud authentication
       uses: google-github-actions/auth@v1
@@ -70,9 +70,9 @@ jobs:
     - name: Set up gcloud CLI
       uses: google-github-actions/setup-gcloud@v1
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        project_id: ${{ vars.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
 
     - name: Deploy to Cloud Run
-      run: gcloud run services replace ./gcp/cloud-run/service.yaml --region ${{ secrets.GCP_REGION }}
+      run: gcloud run services replace ./gcp/cloud-run/service.yaml --region ${{ vars.GCP_REGION }}
