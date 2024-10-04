@@ -45,7 +45,7 @@ jobs:
     - name: Push Docker images to Artifact Registry
       run: |
         docker push ${{ vars.GCP_AR_REPOSITORY }}/octane:latest
-        docker push ${{ vars.GCP_AR_REPOSITORY }}nginx:latest
+        docker push ${{ vars.GCP_AR_REPOSITORY }}/nginx:latest
 
   cr-service-deploy:
     runs-on: ubuntu-latest
