@@ -1,0 +1,196 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: <GCP_CLOUD_RUN_SERVICE>
+  namespace: <GCP_PROJECT_ID>
+spec:
+  template:
+    spec:
+      minInstances: 1
+      maxInstances: 2
+      timeoutSeconds: 120
+      maxConcurrentRequests: 80
+      containers:
+        - name: octane
+          image: <DOCKER_IMAGE_OCTANE>
+          resources:
+            limits:
+              cpu: "1"
+              memory: "256Mi"
+          ports:
+            - containerPort: 8000
+          livenessProbe:
+            exec:
+              command: ["sh", "-c", "php artisan octane:status || exit 1"]
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "php artisan octane:status || exit 1"]
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          env:
+            - name: RUN_MODE
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_RUN_MODE
+                  key: latest
+            - name: APP_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_NAME
+                  key: latest
+            - name: APP_VERSION
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_VERSION
+                  key: latest
+            - name: APP_URL
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_URL
+                  key: latest
+            - name: APP_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_ENV
+                  key: latest
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_KEY
+                  key: latest
+            - name: APP_DEBUG
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_DEBUG
+                  key: latest
+            - name: DB_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_CONNECTION
+                  key: latest
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_HOST
+                  key: latest
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_PORT
+                  key: latest
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_DATABASE
+                  key: latest
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_USERNAME
+                  key: latest
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_PASSWORD
+                  key: latest
+            - name: REDIS_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_CONNECTION
+                  key: latest
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_HOST
+                  key: latest
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_PORT
+                  key: latest
+            - name: REDIS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_USERNAME
+                  key: latest
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_PASSWORD
+                  key: latest
+            - name: RAWG_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_RAWG_API_KEY
+                  key: latest
+            - name: RAWG_API_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_RAWG_API_HOST
+                  key: latest
+            - name: JWT_EXPIRES
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_JWT_EXPIRES
+                  key: latest
+            - name: DISCORD_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DISCORD_APP_ID
+                  key: latest
+            - name: DISCORD_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DISCORD_PUBLIC_KEY
+                  key: latest
+            - name: DISCORD_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DISCORD_BOT_TOKEN
+                  key: latest
+            - name: DISCORD_API_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DISCORD_API_HOST
+                  key: latest
+            - name: ROOT_DISCORD_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_ROOT_DISCORD_USER_ID
+                  key: latest
+            - name: ROOT_DISCORD_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_ROOT_DISCORD_USERNAME
+                  key: latest
+            - name: ROOT_DISCORD_CHANNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_ROOT_DISCORD_CHANNEL_ID
+                  key: latest
+
+        - name: nginx
+          image: <DOCKER_IMAGE_NGINX>
+          limits:
+              cpu: "0.5"
+              memory: "256Mi"
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            exec:
+              command: ["sh", "-c", "curl -f http://localhost:80/api/up || exit 1"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "curl -f http://octane:8000/api/up || exit 1"]
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          env:
+            - name: PHP_UPSTREAM_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_PHP_UPSTREAM_HOST
+                  key: latest

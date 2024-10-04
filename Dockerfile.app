@@ -1,4 +1,4 @@
-FROM 471112560082.dkr.ecr.us-east-2.amazonaws.com/codelab92/php:8.3-swoole
+FROM southamerica-east1-docker.pkg.dev/codelab92/php/8.3-swoole:latest
 
 ARG APP_ENV=production
 ENV APP_ENV=${APP_ENV}
