@@ -20,10 +20,12 @@ fi
 case "$RUN_MODE" in
     octane)
         if [ "$APP_ENV" == "local" ]; then
-            php artisan octane:swoole --host=0.0.0.0 --watch 
+            cp /etc/supervisor/conf.d/octane.dev /etc/supervisor/conf.d/octane.conf
         else
-            php artisan octane:swoole --host=0.0.0.0 --workers=4 --task-workers=4
+            cp /etc/supervisor/conf.d/octane.prod /etc/supervisor/conf.d/octane.conf
         fi
+
+        supervisord -c /etc/supervisor/supervisord.conf
         ;;
     notif)
         php artisan app:dispatch-notifications

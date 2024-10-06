@@ -1,0 +1,10 @@
+[program:octane-prod]
+command=php artisan octane:swoole --workers=4 --task-workers=4
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes = 0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes = 0
+exitcodes=0
+priority=10

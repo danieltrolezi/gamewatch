@@ -31,21 +31,14 @@ jobs:
     - name: Configure Docker to use Artifact Registry
       run: gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev
 
-    - name: Build Docker image (Octane)
-      run: docker build . --file Dockerfile.app --tag octane:latest
+    - name: Build Docker image
+      run: docker build . --file Dockerfile --tag app:latest
 
-    - name: Build Docker image (Nginx)
-      run: docker build . --file Dockerfile.nginx --tag nginx:latest
+    - name: Tag Docker image
+      run: docker tag app:latest ${{ vars.GCP_AR_REPOSITORY }}/app:latest
 
-    - name: Tag Docker images
-      run: |
-        docker tag octane:latest ${{ vars.GCP_AR_REPOSITORY }}/octane:latest
-        docker tag nginx:latest ${{ vars.GCP_AR_REPOSITORY }}/nginx:latest
-
-    - name: Push Docker images to Artifact Registry
-      run: |
-        docker push ${{ vars.GCP_AR_REPOSITORY }}/octane:latest
-        docker push ${{ vars.GCP_AR_REPOSITORY }}/nginx:latest
+    - name: Push Docker image to Artifact Registry
+      run: docker push ${{ vars.GCP_AR_REPOSITORY }}/app:latest
 
   cr-service-deploy:
     runs-on: ubuntu-latest
@@ -57,10 +50,10 @@ jobs:
 
     - name: Update Cloud Run Service definition
       run: |
-        sed -i 's|<GCP_PROJECT_ID>|${{ vars.GCP_PROJECT_ID }}|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<GCP_PROJECT_NUMBER>|${{ vars.GCP_PROJECT_NUMBER }}|' ./gcp/cloud-run/service.yaml
         sed -i 's|<GCP_CLOUD_RUN_SERVICE>|${{ vars.GCP_CLOUD_RUN_SERVICE }}|' ./gcp/cloud-run/service.yaml
-        sed -i 's|<DOCKER_IMAGE_OCTANE>|${{ vars.GCP_AR_REPOSITORY }}/octane:latest|' ./gcp/cloud-run/service.yaml
-        sed -i 's|<DOCKER_IMAGE_NGINX>|${{ vars.GCP_AR_REPOSITORY }}/nginx:latest|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<GCP_REGION>|${{ vars.GCP_AR_REPOSITORY }}/app:latest|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<DOCKER_IMAGE>|${{ vars.GCP_AR_REPOSITORY }}/app:latest|' ./gcp/cloud-run/service.yaml
     
     - name: Set up Google Cloud authentication
       uses: google-github-actions/auth@v1
@@ -75,4 +68,4 @@ jobs:
         export_default_credentials: true
 
     - name: Deploy to Cloud Run
-      run: gcloud run services replace ./gcp/cloud-run/service.yaml --region ${{ vars.GCP_REGION }}
+      run: gcloud run services replace ./gcp/cloud-run/service.yaml --project ${{ vars.GCP_PROJECT_ID }} --region ${{ vars.GCP_REGION }}
