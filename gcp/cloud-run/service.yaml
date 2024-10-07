@@ -17,6 +17,7 @@ spec:
       annotations:
         autoscaling.knative.dev/minScale: "1"
         autoscaling.knative.dev/maxScale: "2"
+        run.googleapis.com/cpu-throttling: 'false'
         run.googleapis.com/startup-cpu-boost: 'true'
     spec:
       containerConcurrency: 80
@@ -31,7 +32,7 @@ spec:
         resources:
           limits:
             cpu: 1000m
-            memory: 256Mi
+            memory: 512Mi
         startupProbe:
           timeoutSeconds: 240
           periodSeconds: 240
