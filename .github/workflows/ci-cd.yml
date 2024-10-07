@@ -25,8 +25,6 @@ jobs:
       uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ vars.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
 
     - name: Configure Docker to use Artifact Registry
       run: gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev
@@ -51,21 +49,20 @@ jobs:
     - name: Update Cloud Run Service definition
       run: |
         sed -i 's|<GCP_PROJECT_NUMBER>|${{ vars.GCP_PROJECT_NUMBER }}|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<GCP_SERVICE_ACCOUNT>|${{ vars.GCP_SERVICE_ACCOUNT }}|' ./gcp/cloud-run/service.yaml
         sed -i 's|<GCP_CLOUD_RUN_SERVICE>|${{ vars.GCP_CLOUD_RUN_SERVICE }}|' ./gcp/cloud-run/service.yaml
         sed -i 's|<GCP_REGION>|${{ vars.GCP_REGION }}|' ./gcp/cloud-run/service.yaml
         sed -i 's|<DOCKER_IMAGE>|${{ vars.GCP_AR_REPOSITORY }}/app:latest|' ./gcp/cloud-run/service.yaml
     
     - name: Set up Google Cloud authentication
-      uses: google-github-actions/auth@v1
+      uses: google-github-actions/auth@v2
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
     - name: Set up gcloud CLI
-      uses: google-github-actions/setup-gcloud@v1
+      uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ vars.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
 
     - name: Deploy to Cloud Run
       run: gcloud run services replace ./gcp/cloud-run/service.yaml --project ${{ vars.GCP_PROJECT_ID }} --region ${{ vars.GCP_REGION }}

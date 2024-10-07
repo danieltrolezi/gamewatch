@@ -21,6 +21,7 @@ spec:
     spec:
       containerConcurrency: 80
       timeoutSeconds: 300
+      serviceAccountName: <GCP_SERVICE_ACCOUNT>
       containers:
       - name: app
         image: <DOCKER_IMAGE>
