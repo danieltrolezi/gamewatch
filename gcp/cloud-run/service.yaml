@@ -18,6 +18,7 @@ spec:
         autoscaling.knative.dev/minScale: "1"
         autoscaling.knative.dev/maxScale: "2"
         run.googleapis.com/vpc-access-egress: all-traffic
+        run.googleapis.com/network-interfaces: '[{"network":"codelab92-vpc","subnetwork":"codelab92-vpc-primary-subnet"}]'
         run.googleapis.com/cpu-throttling: 'false'
         run.googleapis.com/startup-cpu-boost: 'true'
     spec:
