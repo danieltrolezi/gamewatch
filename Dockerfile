@@ -8,10 +8,15 @@ WORKDIR /var/www/gamewatch
 COPY . /var/www/gamewatch
 COPY ./docker/php "${PHP_INI_DIR}/conf.d/"
 COPY ./docker/supervisor /etc/supervisor/
+COPY ./docker/supervisor/conf.d/octane.${APP_ENV} /etc/supervisor/conf.d/octane.conf
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/
 
 RUN if [ "$APP_ENV" = "local" ]; then \
         apt-get update && apt-get install -y nano npm; \
+    fi
+
+RUN if [ "$APP_ENV" = "production" ]; then \
+        composer install --no-interaction --optimize-autoloader --no-dev; \
     fi
 
 #RUN find /var/www/gamewatch -not -path "/var/www/gamewatch/vendor/*" -type f -exec chmod 644 {} \; \

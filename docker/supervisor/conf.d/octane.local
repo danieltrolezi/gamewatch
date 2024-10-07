@@ -1,5 +1,5 @@
-[program:octane-prod]
-command=php artisan octane:swoole --workers=4 --task-workers=4
+[program:octane]
+command=php artisan octane:swoole --watch 
 autostart=true
 autorestart=true
 stdout_logfile=/dev/stdout
