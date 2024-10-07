@@ -22,6 +22,12 @@ case "$RUN_MODE" in
     notif)
         php artisan app:dispatch-notifications
         ;;
+    migrate)
+        php artisan migrate
+        ;;
+    init-db)
+        php artisan migrate --seed
+        ;;
     *)
         echo "Invalid RUN_MODE. Please set it to 'octane' or 'notif'."
         exit 1
