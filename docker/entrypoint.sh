@@ -25,11 +25,11 @@ case "$RUN_MODE" in
     migrate)
         php artisan migrate
         ;;
-    initdb)
-        php artisan migrate --seed
+    command)
+        $RUN_MODE_COMMAND
         ;;
     *)
-        echo "Invalid RUN_MODE. Please set it to 'octane' or 'notif'."
+        echo "Invalid RUN_MODE."
         exit 1
         ;;
 esac

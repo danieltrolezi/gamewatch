@@ -2,7 +2,6 @@
 
 PROJECT="codelab92"
 SECRETS=(
-    "GAMEWATCH_RUN_MODE=octane"
     "GAMEWATCH_APP_NAME=GameWatch"
     "GAMEWATCH_APP_VERSION=1.0.0"
     "GAMEWATCH_APP_URL=http://localhost"

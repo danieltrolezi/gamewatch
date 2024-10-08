@@ -17,6 +17,8 @@ spec:
             env:
             - name: RUN_MODE
               value: <RUN_MODE>
+            - name: RUN_MODE_COMMAND
+              value: <RUN_MODE_COMMAND>
             - name: APP_NAME
               valueFrom:
                 secretKeyRef:
