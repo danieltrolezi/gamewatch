@@ -26,7 +26,7 @@ case "$RUN_MODE" in
         php artisan migrate
         ;;
     command)
-        $RUN_MODE_COMMAND
+        eval $RUN_MODE_COMMAND
         ;;
     *)
         echo "Invalid RUN_MODE."
