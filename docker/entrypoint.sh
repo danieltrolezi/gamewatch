@@ -12,6 +12,9 @@ if [ ! -d "vendor" ] || [ -z "$(ls -A vendor)" ]; then
 
         php artisan key:generate --ansi
         php artisan migrate --seed
+    else 
+        composer install --no-interaction --optimize-autoloader
+        php artisan migrate --seed    
     fi    
 fi
 
