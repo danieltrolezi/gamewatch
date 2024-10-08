@@ -44,7 +44,7 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "mysql -u root -p${DB_PASSWORD} -e 'SHOW DATABASES;'"]
       interval: 5s
       timeout: 10s
       retries: 5

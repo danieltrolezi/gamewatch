@@ -1,0 +1,154 @@
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: <GCP_CLOUD_RUN_SERVICE>-task-runner
+  namespace: '<GCP_PROJECT_NUMBER>'
+  labels:
+    cloud.googleapis.com/location: <GCP_REGION>
+spec:
+  template:
+    spec:
+      parallelism: 1
+      taskCount: 1
+      template:
+        spec:
+          containers:
+          - image: <DOCKER_IMAGE>
+            env:
+            - name: RUN_MODE
+              value: <RUN_MODE>
+            - name: APP_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_NAME
+                  key: latest
+            - name: APP_VERSION
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_VERSION
+                  key: latest
+            - name: APP_URL
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_URL
+                  key: latest
+            - name: APP_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_ENV
+                  key: latest
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_KEY
+                  key: latest
+            - name: APP_DEBUG
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_APP_DEBUG
+                  key: latest
+            - name: DB_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_CONNECTION
+                  key: latest
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_HOST
+                  key: latest
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_PORT
+                  key: latest
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_DATABASE
+                  key: latest
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_USERNAME
+                  key: latest
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DB_PASSWORD
+                  key: latest
+            - name: REDIS_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_CONNECTION
+                  key: latest
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_HOST
+                  key: latest
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_PORT
+                  key: latest
+            - name: REDIS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_USERNAME
+                  key: latest
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_REDIS_PASSWORD
+                  key: latest
+            - name: RAWG_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_RAWG_API_KEY
+                  key: latest
+            - name: RAWG_API_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_RAWG_API_HOST
+                  key: latest
+            - name: JWT_EXPIRES
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_JWT_EXPIRES
+                  key: latest
+            - name: DISCORD_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DISCORD_APP_ID
+                  key: latest
+            - name: DISCORD_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DISCORD_PUBLIC_KEY
+                  key: latest
+            - name: DISCORD_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DISCORD_BOT_TOKEN
+                  key: latest
+            - name: DISCORD_API_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_DISCORD_API_HOST
+                  key: latest
+            - name: ROOT_DISCORD_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_ROOT_DISCORD_USER_ID
+                  key: latest
+            - name: ROOT_DISCORD_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_ROOT_DISCORD_USERNAME
+                  key: latest
+            - name: ROOT_DISCORD_CHANNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: GAMEWATCH_ROOT_DISCORD_CHANNEL_ID
+                  key: latest

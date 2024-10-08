@@ -52,6 +52,8 @@ jobs:
         sed -i 's|<GCP_SERVICE_ACCOUNT>|${{ vars.GCP_SERVICE_ACCOUNT }}|' ./gcp/cloud-run/service.yaml
         sed -i 's|<GCP_CLOUD_RUN_SERVICE>|${{ vars.GCP_CLOUD_RUN_SERVICE }}|' ./gcp/cloud-run/service.yaml
         sed -i 's|<GCP_REGION>|${{ vars.GCP_REGION }}|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<GCP_VPC>|${{ vars.GCP_VPC }}|' ./gcp/cloud-run/service.yaml
+        sed -i 's|<GCP_VPC_SUBNET>|${{ vars.GCP_VPC_SUBNET }}|' ./gcp/cloud-run/service.yaml
         sed -i 's|<DOCKER_IMAGE>|${{ vars.GCP_AR_REPOSITORY }}/app:latest|' ./gcp/cloud-run/service.yaml
     
     - name: Set up Google Cloud authentication

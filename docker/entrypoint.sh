@@ -25,7 +25,7 @@ case "$RUN_MODE" in
     migrate)
         php artisan migrate
         ;;
-    init-db)
+    initdb)
         php artisan migrate --seed
         ;;
     *)

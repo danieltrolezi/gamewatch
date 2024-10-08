@@ -18,7 +18,7 @@ spec:
         autoscaling.knative.dev/minScale: "1"
         autoscaling.knative.dev/maxScale: "2"
         run.googleapis.com/vpc-access-egress: all-traffic
-        run.googleapis.com/network-interfaces: '[{"network":"codelab92-vpc","subnetwork":"codelab92-vpc-primary-subnet"}]'
+        run.googleapis.com/network-interfaces: '[{"network":"<GCP_VPC>","subnetwork":"<GCP_VPC_SUBNET>"}]'
         run.googleapis.com/cpu-throttling: 'false'
         run.googleapis.com/startup-cpu-boost: 'true'
     spec:
@@ -57,10 +57,7 @@ spec:
           periodSeconds: 10
         env:
           - name: RUN_MODE
-            valueFrom:
-              secretKeyRef:
-                name: GAMEWATCH_RUN_MODE
-                key: latest
+            value: octane
           - name: APP_NAME
             valueFrom:
               secretKeyRef:
