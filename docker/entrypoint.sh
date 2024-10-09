@@ -11,23 +11,15 @@ if [ ! -d "vendor" ] || [ -z "$(ls -A vendor)" ]; then
         npm install
 
         php artisan key:generate --ansi
-        php artisan migrate --seed
-    else 
-        composer install --no-interaction --optimize-autoloader
-        php artisan migrate --seed    
     fi    
 fi
 
 case "$RUN_MODE" in
     octane)
-        php artisan migrate
         supervisord -c /etc/supervisor/supervisord.conf
         ;;
     notif)
         php artisan app:dispatch-notifications
-        ;;
-    migrate)
-        php artisan migrate
         ;;
     command)
         eval $RUN_MODE_COMMAND

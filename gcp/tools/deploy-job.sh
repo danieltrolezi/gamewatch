@@ -16,7 +16,7 @@ fi
 RUN_MODE=$1
 
 # Define command case RUN_MODE=command
-RUN_MODE_COMMAND="sleep 5 \&\& php artisan migrate --seed -vvv"
+RUN_MODE_COMMAND=""
 
 # Copy the template to a new job.yaml file
 cp "$SCRIPT_DIR/../cloud-run/job.template.yaml" "$JOB_DEFINITION"

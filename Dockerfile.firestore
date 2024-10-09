@@ -1,0 +1,13 @@
+FROM node:18-alpine
+
+ARG FIRESTORE_PROJECT_ID
+ENV FIRESTORE_PROJECT_ID=${FIRESTORE_PROJECT_ID}
+
+RUN apk add --no-cache openjdk11 \
+    && npm install -g firebase-tools
+
+WORKDIR /firebase
+
+COPY ./docker/firebase /firebase
+
+CMD ["sh", "-c", "firebase emulators:start --only firestore --project ${FIRESTORE_PROJECT_ID}"]
