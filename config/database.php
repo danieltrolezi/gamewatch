@@ -110,9 +110,8 @@ return [
         ],
 
         'firestore' => [
-            'host' => env('FIRESTORE_HOST', 'localhost'),
-            'port' => env('FIRESTORE_PORT', '8080'),
-            'project_id' => env('FIRESTORE_PROJECT_ID', 'codelab92')
+            'project_id' => env('FIRESTORE_PROJECT_ID'),
+            'database' => env('FIRESTORE_DATABASE', 'gamewatch')
         ]
      ],
 

@@ -14,6 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Artisan::call('app:create-root');
+        //
     }
 }
