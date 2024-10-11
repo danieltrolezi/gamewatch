@@ -3,49 +3,16 @@
 namespace App\Models;
 
 use App\Enums\Scope;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Auth\Authenticatable as AutenticatableTrait;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema()]
-class User extends Authenticatable
+class User extends Firestore implements Authenticatable
 {
-    use HasApiTokens;
-    use HasFactory;
-    use Notifiable;
+    use AutenticatableTrait;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'discord_user_id',
-        'discord_channel_id'
-    ];
-
-    /**
-     * @var array
-     */
-    protected $with = [
-        'settings'
-    ];
-
+    // @TODO Test Swagger
     #[OA\Property(property: 'id', type: 'integer')]
     #[OA\Property(property: 'name', type: 'string')]
     #[OA\Property(property: 'email', type: 'string')]
@@ -54,24 +21,58 @@ class User extends Authenticatable
     #[OA\Property(property: 'discord_channel_id', type: 'string')]
     #[OA\Property(property: 'created_at', type: 'datetime')]
     #[OA\Property(property: 'updated_at', type: 'datetime')]
-    #[OA\Property(property: 'settings', ref: '#/components/schemas/UserSetting')]
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-    }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'password' => 'hashed',
-            'scopes'   => 'array'
-        ];
-    }
+    #[OA\Property(property: 'settings', ref: '#/components/schemas/UserSetting')]
+
+    #[OA\Property(property: 'id', type: 'integer')]
+    #[OA\Property(property: 'user_id', type: 'integer')]
+    #[OA\Property(
+        property: 'platforms',
+        type: 'array',
+        items: new OA\Items(
+            type: 'string',
+            enum: 'App\Enums\Platform'
+        ),
+    )]
+    #[OA\Property(
+        property: 'genres',
+        type: 'array',
+        items: new OA\Items(
+            type: 'string',
+            enum: 'App\Enums\Rawg\RawgGenre'
+        ),
+    )]
+    #[OA\Property(
+        property: 'period',
+        type: 'string',
+        enum: 'App\Enums\Period'
+    )]
+    #[OA\Property(
+        property: 'frequency',
+        type: 'string',
+        enum: 'App\Enums\Frequency'
+    )]
+
+    public string $name;
+    public string $email;
+    public string $password;
+    public array $scopes;
+    // TODO transform discord_* in array
+    public ?string $discord_user_id;
+    public ?string $discord_username;
+    public ?string $discord_channel_id;
+    public array $settings;
+
+    protected static array $persist = [
+        'name',
+        'email',
+        'password',
+        'scopes',
+        'discord_user_id',
+        'discord_username',
+        'discord_channel_id',
+        'settings',
+    ];
 
     /**
      * @return boolean
@@ -79,13 +80,5 @@ class User extends Authenticatable
     public function isRoot(): bool
     {
         return in_array(Scope::Root->value, $this->scopes);
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function settings(): HasOne
-    {
-        return $this->hasOne(UserSetting::class);
     }
 }

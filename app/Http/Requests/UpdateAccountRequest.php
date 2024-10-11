@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Frequency;
+use App\Enums\Period;
+use App\Enums\Platform;
+use App\Enums\Rawg\RawgGenre;
+use App\Rules\Unique;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateAccountRequest extends FormRequest
 {
@@ -23,9 +27,16 @@ class UpdateAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'               => 'sometimes|string|min:5|max:255',
-            'email'              => ['sometimes', 'email', Rule::unique('users', 'email')->ignore($this->user())],
-            'password'           => 'sometimes|string|min:6|max:18',
+            'name'                 => 'sometimes|string|min:5|max:255',
+            'email'                => ['sometimes', 'email', new Unique('users', 'email', $this->user()->id)],
+            'password'             => 'sometimes|string|min:6|max:18',
+            'settings'             => 'sometimes|array',
+            'settings.platforms'   => ['sometimes', 'array'],
+            'settings.platforms.*' => ['required', 'string', 'in:' . Platform::valuesAsString()],
+            'settings.genres'      => ['sometimes', 'array'],
+            'settings.genres.*'    => ['required', 'string', 'in:' . RawgGenre::valuesAsString()],
+            'settings.period'      => ['sometimes', 'string', 'in:' . Period::valuesAsString()],
+            'settings.frequency'   => ['sometimes', 'string', 'in:' . Frequency::valuesAsString()],
         ];
     }
 }

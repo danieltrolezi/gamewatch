@@ -30,7 +30,6 @@ Route::middleware('throttle:api')->group(function () {
         Route::prefix('account')->controller(AccountController::class)->group(function () {
             Route::get('/show', 'show');
             Route::put('/update', 'update');
-            Route::put('/settings', 'settings');
         });
 
         Route::middleware('scopes:' . Scope::Root->value)->group(function () {

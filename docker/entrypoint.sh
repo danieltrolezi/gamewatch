@@ -11,6 +11,7 @@ if [ ! -d "vendor" ] || [ -z "$(ls -A vendor)" ]; then
         npm install
 
         php artisan key:generate --ansi
+        php artisan app:create-root
     fi    
 fi
 
