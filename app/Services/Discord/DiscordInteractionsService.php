@@ -56,7 +56,7 @@ class DiscordInteractionsService extends DiscordBaseService
     private function authenticateUser(array $payload): void
     {
         Auth::setUser(
-            resolve(DiscordAppService::class)->findOrCreateUser($payload)
+            resolve(DiscordAppService::class)->updateOrCreateUser($payload)
         );
     }
 

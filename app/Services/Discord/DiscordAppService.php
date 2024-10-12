@@ -41,22 +41,28 @@ class DiscordAppService extends DiscordBaseService
      * @param array $payload
      * @return User
      */
-    public function findOrCreateUser(array $payload): User
+    public function updateOrCreateUser(array $payload): User
     {
         $user = $this->userRepository->findByDiscordId(
             $payload['user']['id']
         );
 
         if (!$user) {
-            $user = $this->userRepository->createFromDiscord([
+            $user = $this->userRepository->createDiscord([
                 'name'               => $payload['user']['global_name'],
                 'discord_user_id'    => $payload['user']['id'],
                 'discord_username'   => $payload['user']['username'],
                 'discord_channel_id' => $payload['channel']['id']
             ]);
+        } else {
+            $user = $this->userRepository->update($user, [
+                'name'               => $payload['user']['global_name'],
+                'discord_username'   => $payload['user']['username'],
+                'discord_channel_id' => $payload['channel']['id']
+            ]);
         }
 
-        return $user->load('settings');
+        return $user;
     }
 
     /**
@@ -169,7 +175,7 @@ class DiscordAppService extends DiscordBaseService
     public function dispatchNotifications(): void
     {
         $command = resolve(ReleasesCommand::class);
-        $users = $this->userRepository->getDiscordUsersAndSettings();
+        $users = $this->userRepository->getDiscordUsers();
 
         Log::info('Dispatching notifications for ' . $users->count() . ' user(s)...');
 

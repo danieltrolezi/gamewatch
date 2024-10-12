@@ -58,9 +58,9 @@ class User extends Firestore implements Authenticatable
     public string $password;
     public array $scopes;
     // TODO transform discord_* in array
-    public ?string $discord_user_id;
-    public ?string $discord_username;
-    public ?string $discord_channel_id;
+    public ?string $discord_user_id = null;
+    public ?string $discord_username = null;
+    public ?string $discord_channel_id = null;
     public array $settings;
 
     protected static array $persist = [

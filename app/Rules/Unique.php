@@ -34,17 +34,13 @@ class Unique implements ValidationRule
             throw new RuntimeException("Model class {$model} does not exist.");
         }
 
-        $conditions = [
-            [$this->field, '=', $value]
-        ];
+        $query = $model::where($this->field, $value);
 
         if (!empty($this->ignoreId)) {
-            $conditions[] = ['id', '!=', $this->ignoreId];
+            $query = $query->where('id', $this->ignoreId, '!=');
         }
 
-        $document = $model::whereMany($conditions)->first();
-
-        if (!empty($document)) {
+        if (!empty($query->first())) {
             $fail("The :attribute {$value} is already in use.");
         }
     }

@@ -112,6 +112,14 @@ class UserRepository
     }
 
     /**
+     * @return LazyCollection
+     */
+    public function getDiscordUsers(): LazyCollection
+    {
+        return User::whereNotNull('discord_user_id')->lazy();
+    }
+
+    /**
      * @param User $user
      * @param array $data
      * @return User
@@ -125,15 +133,5 @@ class UserRepository
         $user->update($data);
 
         return $user;
-    }
-
-    /**
-     * @return LazyCollection
-     */
-    public function getDiscordUsersAndSettings(): LazyCollection
-    {
-        return User::whereNotNull('discord_user_id')
-            ->with('settings')
-            ->lazy();
     }
 }
