@@ -74,6 +74,18 @@ class User extends Firestore implements Authenticatable
         'settings',
     ];
 
+    protected static array $hidden = [
+        'password',
+    ];
+
+    /**
+     * @return string
+     */
+    public function getKeyName(): string
+    {
+        return 'id';
+    }
+
     /**
      * @return boolean
      */

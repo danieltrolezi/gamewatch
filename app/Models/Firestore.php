@@ -12,8 +12,9 @@ use Google\Cloud\Firestore\Query;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
+use JsonSerializable;
 
-abstract class Firestore
+abstract class Firestore implements JsonSerializable
 {
     public readonly string $id;
     public Timestamp $created_at;
@@ -22,6 +23,7 @@ abstract class Firestore
     protected static ?string $collection = null;
     protected static array $conditions = [];
     protected static array $persist = [];
+    protected static array $hidden = [];
 
     public function __construct(array $attributes = [])
     {
@@ -40,11 +42,41 @@ abstract class Firestore
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getKeyName(): string
+    public function jsonSerialize(): mixed
     {
-        return 'id';
+        $attributes = get_object_vars($this);
+        $attributes = $this->applyPersistFilter($attributes);
+        $attributes = $this->applyHiddenFilter($attributes);
+
+        return $attributes;
+    }
+
+    /**
+     * @param array $attributes
+     * @return array
+     */
+    private static function applyPersistFilter(array $attributes): array
+    {
+        $attributes = array_filter($attributes, function ($key) {
+            return in_array($key, [...static::$persist, 'created_at', 'updated_at']);
+        }, ARRAY_FILTER_USE_KEY);
+
+        return $attributes;
+    }
+
+    /**
+     * @param array $attributes
+     * @return array
+     */
+    private static function applyHiddenFilter(array $attributes): array
+    {
+        $attributes = array_filter($attributes, function ($key) {
+            return !in_array($key, static::$hidden);
+        }, ARRAY_FILTER_USE_KEY);
+
+        return $attributes;
     }
 
     /**
@@ -124,21 +156,18 @@ abstract class Firestore
      */
     private static function prepareAttributes(array $attributes, bool $update = false): array
     {
-        $attributes = array_filter($attributes, function ($key) {
-            return in_array($key, static::$persist);
-        }, ARRAY_FILTER_USE_KEY);
-
-        self::setTimestamps($attributes, $update);
+        $attributes = self::applyPersistFilter($attributes);
+        $attributes = self::setTimestamps($attributes, $update);
 
         return $attributes;
     }
 
     /**
-     * @param array $data
+     * @param array $attributes
      * @param boolean $update
-     * @return void
+     * @return array
      */
-    private static function setTimestamps(array &$attributes, bool $update = false): void
+    private static function setTimestamps(array $attributes, bool $update = false): array
     {
         $now = new Timestamp(new DateTime());
 
@@ -147,6 +176,8 @@ abstract class Firestore
         }
 
         $attributes['updated_at'] = $now;
+
+        return $attributes;
     }
 
     /**
@@ -199,7 +230,7 @@ abstract class Firestore
      */
     public static function whereNotNull(string $field): static
     {
-        return self::where($field, "", '!=');
+        return self::where($field, '', '!=');
     }
 
     /**
