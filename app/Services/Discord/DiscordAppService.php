@@ -47,19 +47,19 @@ class DiscordAppService extends DiscordBaseService
             $payload['user']['id']
         );
 
+        $data = [
+            'name' => $payload['user']['global_name'],
+            'discord' => [
+                'user_id'    => $payload['user']['id'],
+                'username'   => $payload['user']['username'],
+                'channel_id' => $payload['channel']['id']
+            ]
+        ];
+
         if (!$user) {
-            $user = $this->userRepository->createDiscord([
-                'name'               => $payload['user']['global_name'],
-                'discord_user_id'    => $payload['user']['id'],
-                'discord_username'   => $payload['user']['username'],
-                'discord_channel_id' => $payload['channel']['id']
-            ]);
+            $user = $this->userRepository->createDiscord($data);
         } else {
-            $user = $this->userRepository->update($user, [
-                'name'               => $payload['user']['global_name'],
-                'discord_username'   => $payload['user']['username'],
-                'discord_channel_id' => $payload['channel']['id']
-            ]);
+            $user = $this->userRepository->update($user, $data);
         }
 
         return $user;
@@ -110,8 +110,10 @@ class DiscordAppService extends DiscordBaseService
      */
     public function sendMessage(User $user, array $payload): bool
     {
+        $channelId = $user->discord['channel_id'];
+
         $res = $this->makeRequest(
-            uri: "/channels/$user->discord_channel_id/messages",
+            uri: "/channels/$channelId/messages",
             payload: $payload
         );
 
@@ -188,8 +190,8 @@ class DiscordAppService extends DiscordBaseService
                 Log::info(
                     sprintf(
                         'Notification for %s (%s): %s',
-                        $user->discord_username,
-                        $user->discord_user_id,
+                        $user->discord['username'],
+                        $user->discord['user_id'],
                         $result ? 'SUCCESS' : 'FAILED'
                     )
                 );
@@ -197,8 +199,8 @@ class DiscordAppService extends DiscordBaseService
                 Log::info(
                     sprintf(
                         'Notification for %s (%s): SKIPPED',
-                        $user->discord_username,
-                        $user->discord_user_id,
+                        $user->discord['username'],
+                        $user->discord['user_id'],
                     )
                 );
             }

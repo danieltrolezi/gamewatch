@@ -2,7 +2,7 @@
 
 namespace App\Services\Discord\Commands;
 
-use App\Models\PaginatedResponse;
+use App\Models\Pagination;
 use App\Models\User;
 use App\Services\Discord\Commands\Contracts\CallbackCommandInterface;
 use App\Services\Discord\Utils\DiscordComponentUtils;
@@ -98,11 +98,11 @@ class ReleasesCommand extends BaseCommand implements CallbackCommandInterface
     }
 
     /**
-     * @param PaginatedResponse $response
+     * @param Pagination $response
      * @param string $period
      * @return array
      */
-    private function makeResponse(PaginatedResponse $response, string $period): array
+    private function makeResponse(Pagination $response, string $period): array
     {
         $friendlyPeriod = str_replace('-', ' ', $period);
 
@@ -126,10 +126,10 @@ class ReleasesCommand extends BaseCommand implements CallbackCommandInterface
     }
 
     /**
-     * @param PaginatedResponse $response
+     * @param Pagination $response
      * @return void
      */
-    private function makeGameEmbeds(PaginatedResponse $response)
+    private function makeGameEmbeds(Pagination $response)
     {
         $embeds = [];
 

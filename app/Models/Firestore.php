@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\NotFoundException;
+use App\Models\Utils\Fillable;
 use DateTime;
 use Google\Cloud\Core\Timestamp;
 use Google\Cloud\Firestore\CollectionReference as FirestoreCollection;
@@ -12,41 +13,26 @@ use Google\Cloud\Firestore\Query;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
-use JsonSerializable;
 
-abstract class Firestore implements JsonSerializable
+abstract class Firestore extends Model
 {
+    use Fillable;
+
     public readonly string $id;
-    public Timestamp $created_at;
-    public Timestamp $updated_at;
+    public Timestamp $createdAt;
+    public Timestamp $updatedAt;
 
     protected static ?string $collection = null;
     protected static array $conditions = [];
     protected static array $persist = [];
     protected static array $hidden = [];
 
-    public function __construct(array $attributes = [])
-    {
-        $this->fill($attributes);
-    }
-
-    /**
-     * @param array $attributes
-     * @return void
-     */
-    public function fill(array $attributes = []): void
-    {
-        foreach ($attributes as $key => $value) {
-            $this->$key = $value;
-        }
-    }
-
     /**
      * @return mixed
      */
     public function jsonSerialize(): mixed
     {
-        $attributes = get_object_vars($this);
+        $attributes = parent::jsonSerialize();
         $attributes = $this->applyPersistFilter($attributes);
         $attributes = $this->applyHiddenFilter($attributes);
 

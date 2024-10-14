@@ -219,7 +219,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedResponse'
+                $ref: '#/components/schemas/Pagination'
   '/api/rawg/games/upcoming-releases/{period}':
     get:
       tags:
@@ -299,7 +299,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedResponse'
+                $ref: '#/components/schemas/Pagination'
   '/api/rawg/games/{game}/achievements':
     get:
       tags:
@@ -501,7 +501,7 @@ components:
           items:
             type: object
       type: object
-    PaginatedResponse:
+    Pagination:
       properties:
         total:
           type: integer

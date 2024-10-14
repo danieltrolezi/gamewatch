@@ -6,7 +6,7 @@ use App\Enums\Period;
 use App\Enums\Rawg\RawgField;
 use App\Enums\Rawg\RawgGenre;
 use App\Models\Game;
-use App\Models\PaginatedResponse;
+use App\Models\Pagination;
 use App\Services\Rawg\RawgFilterService;
 use App\Services\Rawg\RawgGamesService;
 use Illuminate\Support\Facades\Config;
@@ -59,7 +59,7 @@ class RawgGamesServiceTest extends TestCase
 
         $result = $service->getRecommendations($genre, $filters);
 
-        $this->assertInstanceOf(PaginatedResponse::class, $result);
+        $this->assertInstanceOf(Pagination::class, $result);
         $this->assertInstanceOf(Game::class, $result->getContents()['data']->first());
     }
 
@@ -87,7 +87,7 @@ class RawgGamesServiceTest extends TestCase
 
         $result = $service->getUpcomingReleases($period, $filters);
 
-        $this->assertInstanceOf(PaginatedResponse::class, $result);
+        $this->assertInstanceOf(Pagination::class, $result);
         $this->assertInstanceOf(Game::class, $result->getContents()['data']->first());
     }
 }

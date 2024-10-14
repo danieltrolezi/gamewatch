@@ -119,8 +119,8 @@ return [
     */
     'jwt' => [
         'algorithm'  => env('JWT_ALGORITHM', 'HS256'),
-        'expires'    => env('JWT_EXPIRES', true),
-        'ttl'        => env('JWT_TTL', 3600),
+        'expires' => env('JWT_EXPIRES', true),
+        'ttl' => env('JWT_TTL', 3600),
     ],
 
     /*
@@ -130,10 +130,12 @@ return [
     |
     */
     'root' => [
-        'name'               => env('ROOT_NAME', 'root'),
-        'email'              => env('ROOT_EMAIL', 'root@localhost'),
-        'password'           => env('ROOT_PASSWORD', 'secret'),
-        'discord_user_id'    => env('ROOT_DISCORD_USER_ID'),
+        'name' => env('ROOT_NAME', 'root'),
+        'email' => env('ROOT_EMAIL', 'root@localhost'),
+        'password' => env('ROOT_PASSWORD', 'secret'),
+        'discord' => [
+            'user_id' => env('ROOT_DISCORD_USER_ID'),
+        ]
     ],
 
 ];

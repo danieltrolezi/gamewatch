@@ -39,8 +39,8 @@ class UserRepository
         $user->password = bcrypt($data['password']);
         $user->scopes = [Scope::Default->value];
 
-        if (!empty($data['discord_user_id'])) {
-            $user->discord_user_id = $data['discord_user_id'];
+        if (!empty($data['discord'])) {
+            $user->discord = $data['discord'];
         }
 
         $user->settings = $this->getDefaultSettings();
@@ -62,7 +62,7 @@ class UserRepository
         $user->email = config('auth.root.email');
         $user->password = bcrypt(config('auth.root.password'));
         $user->scopes = Scope::values();
-        $user->discord_user_id = config('auth.root.discord_user_id');
+        $user->discord = config('auth.root.discord');
         $user->settings = $this->getDefaultSettings();
         $user->save();
 
@@ -79,9 +79,7 @@ class UserRepository
         $user = new User();
         $user->name = $data['name'];
         $user->scopes = [Scope::Default->value];
-        $user->discord_user_id = $data['discord_user_id'];
-        $user->discord_username = $data['discord_username'];
-        $user->discord_channel_id = $data['discord_channel_id'];
+        $user->discord = $data['discord'];
         $user->settings = $this->getDefaultSettings();
         $user->save();
 
@@ -108,7 +106,7 @@ class UserRepository
      */
     public function findByDiscordId(string $discordUserId): ?User
     {
-        return User::where('discord_user_id', $discordUserId)->first();
+        return User::where('discord.user_id', $discordUserId)->first();
     }
 
     /**
@@ -116,7 +114,10 @@ class UserRepository
      */
     public function getDiscordUsers(): LazyCollection
     {
-        return User::whereNotNull('discord_user_id')->lazy();
+        return User::whereNotNull('discord.user_id')
+            ->whereNotNull('discord.username')
+            ->whereNotNull('discord.channel_id')
+            ->lazy();
     }
 
     /**
