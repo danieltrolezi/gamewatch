@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Exceptions\NotFoundHttpException;
+use App\Exceptions\NotFoundException;
 use DateTime;
 use Google\Cloud\Core\Timestamp;
 use Google\Cloud\Firestore\CollectionReference as FirestoreCollection;
@@ -307,7 +307,7 @@ abstract class Firestore implements JsonSerializable
         $document = $this->getFirestoreCollection()->document($this->id);
 
         if (!$document->snapshot()->exists()) {
-            throw new NotFoundHttpException();
+            throw new NotFoundException();
         }
 
         $attributes = $this->prepareAttributes($attributes, true);
