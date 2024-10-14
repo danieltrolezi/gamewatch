@@ -146,5 +146,16 @@ return [
         'user'    => env('RATE_LIMIT_USER', 100),
         'guest'   => env('RATE_LIMIT_GUEST', 10),
         'discord' => env('RATE_LIMIT_DISCORD', 1000)
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Firewall for Public Endpoints
+    |--------------------------------------------------------------------------
+    */
+
+    'firewall' => [
+        'enabled' => env('FIREWALL_ENABLED', false),
+        'ip'      => env('FIREWALL_IP', '127.0.0.1'),
+    ],
 ];

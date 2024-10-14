@@ -15,11 +15,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Octane\Events\RequestHandled;
 use Laravel\Octane\Events\RequestReceived;
-use Spatie\Health\Checks\Checks\DatabaseCheck;
-use Spatie\Health\Checks\Checks\EnvironmentCheck;
-use Spatie\Health\Checks\Checks\RedisCheck;
-use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
-use Spatie\Health\Facades\Health;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,26 +31,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->setHealthCheck();
         $this->setJwtGuard();
         $this->setRateLimit();
         $this->setLogContext();
         $this->setRequestLogging();
-    }
-
-    private function setHealthCheck(): void
-    {
-        $env = match (config('app.url')) {
-            'http://gamewatch.local' => 'local',
-            default                  => 'production'
-        };
-
-        Health::checks([
-            EnvironmentCheck::new()->expectEnvironment($env),
-            UsedDiskSpaceCheck::new(),
-            DatabaseCheck::new(),
-            RedisCheck::new()
-        ]);
     }
 
     private function setJwtGuard(): void
