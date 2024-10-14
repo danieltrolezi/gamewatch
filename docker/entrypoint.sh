@@ -4,15 +4,16 @@ if [ -f .env ]; then
     export $(cat .env | grep -v '^#' | xargs)
 fi
 
-if [ ! -d "vendor" ] || [ -z "$(ls -A vendor)" ]; then
-    if [ "$APP_ENV" == "local" ]; then
+if [ "$APP_ENV" == "local" ]; then
+    if [ ! -d "vendor" ] || [ -z "$(ls -A vendor)" ]; then
         composer install --no-interaction
         composer dump-autoload
         npm install
 
         php artisan key:generate --ansi
-        php artisan app:create-root
-    fi    
+    fi
+
+    php artisan app:create-root
 fi
 
 case "$RUN_MODE" in
