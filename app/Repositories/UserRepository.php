@@ -44,9 +44,8 @@ class UserRepository
         }
 
         $user->settings = $this->getDefaultSettings();
-        $user->save();
 
-        return $user;
+        return $user->save();
     }
 
     public function createRoot(): bool
@@ -81,9 +80,8 @@ class UserRepository
         $user->scopes = [Scope::Default->value];
         $user->discord = $data['discord'];
         $user->settings = $this->getDefaultSettings();
-        $user->save();
 
-        return $user;
+        return $user->save();
     }
 
     public function findById(string $id): ?User
@@ -131,8 +129,6 @@ class UserRepository
             $data['password'] = bcrypt($data['password']);
         }
 
-        $user->update($data);
-
-        return $user;
+        return $user->update($data);
     }
 }

@@ -32,9 +32,9 @@ class UpdateAccountRequest extends FormRequest
             'password'             => 'sometimes|string|min:6|max:18',
             'settings'             => 'sometimes|array',
             'settings.platforms'   => ['sometimes', 'array'],
-            'settings.platforms.*' => ['required', 'string', 'in:' . Platform::valuesAsString()],
+            'settings.platforms.*' => ['sometimes', 'string', 'in:' . Platform::valuesAsString()],
             'settings.genres'      => ['sometimes', 'array'],
-            'settings.genres.*'    => ['required', 'string', 'in:' . RawgGenre::valuesAsString()],
+            'settings.genres.*'    => ['sometimes', 'string', 'in:' . RawgGenre::valuesAsString()],
             'settings.period'      => ['sometimes', 'string', 'in:' . Period::valuesAsString()],
             'settings.frequency'   => ['sometimes', 'string', 'in:' . Frequency::valuesAsString()],
         ];

@@ -44,7 +44,11 @@ class Application
         name: 'account',
         description: 'account management routes'
     )]
-    public function tags()
+    /**
+     * @return null
+     */
+    public function tags(): null
     {
+        return null;
     }
 }

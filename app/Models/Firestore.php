@@ -46,7 +46,7 @@ abstract class Firestore extends Model
     private static function applyPersistFilter(array $attributes): array
     {
         $attributes = array_filter($attributes, function ($key) {
-            return in_array($key, [...static::$persist, 'created_at', 'updated_at']);
+            return in_array($key, ['id', ...static::$persist, 'created_at', 'updated_at']);
         }, ARRAY_FILTER_USE_KEY);
 
         return $attributes;
@@ -298,7 +298,7 @@ abstract class Firestore extends Model
 
         $attributes = $this->prepareAttributes($attributes, true);
         $document->set($attributes, ['merge' => true]);
-        $this->fill($attributes);
+        $this->fill($document->snapshot()->data());
 
         return $this;
     }
@@ -308,13 +308,31 @@ abstract class Firestore extends Model
      */
     public function save(): self
     {
-        $data = get_object_vars($this);
+        $attributes = get_object_vars($this);
 
         if (!empty($this->id)) {
-            return $this->update($data);
+            return $this->update($attributes);
         }
 
-        return $this->create($data);
+        return $this->createSelf($attributes);
+    }
+
+    /**
+     * @param array $attributes
+     * @return self
+     */
+    private function createSelf(array $attributes): self
+    {
+        $attributes = $this->prepareAttributes($attributes);
+        $newDocument = $this->getFirestoreCollection()->add($attributes);
+        $snapshot = $newDocument->snapshot();
+
+        $this->fill(array_merge(
+            ['id' => $snapshot->id()],
+            $snapshot->data()
+        ));
+
+        return $this;
     }
 
     /**

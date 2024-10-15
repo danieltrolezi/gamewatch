@@ -4,13 +4,10 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\User;
 use GuzzleHttp\Client;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class RawgGamesControllerTest extends TestCase
 {
-    use DatabaseMigrations;
-
     private User $user;
 
     public function setUp(): void

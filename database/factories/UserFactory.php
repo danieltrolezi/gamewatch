@@ -2,7 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Enums\Frequency;
+use App\Enums\Period;
+use App\Enums\Platform;
+use App\Enums\Rawg\RawgGenre;
 use App\Enums\Scope;
+use DateTime;
+use Google\Cloud\Core\Timestamp;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,14 +29,21 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $now = new Timestamp(new DateTime());
+
         return [
             'name'               => fake()->name(),
             'email'              => fake()->unique()->safeEmail(),
             'password'           => static::$password ??= Hash::make('password'),
             'scopes'             => [Scope::Default->value],
-            'discord_user_id'    => null,
-            'discord_username'   => null,
-            'discord_channel_id' => null
+            'settings'           => [
+                'platforms' => Platform::values(),
+                'genres'    => RawgGenre::values(),
+                'period'    => Period::Next_30_Days->value,
+                'frequency' => Frequency::Monthly->value,
+            ],
+            'created_at'         => $now,
+            'updated_at'         => $now,
         ];
     }
 }

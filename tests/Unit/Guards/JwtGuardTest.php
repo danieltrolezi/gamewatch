@@ -3,17 +3,13 @@
 namespace Tests\Unit\Guards;
 
 use App\Guards\JwtGuard;
-use App\Models\User;
 use App\Services\AuthService;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Auth;
 use Mockery;
 use Tests\TestCase;
 
 class JwtGuardTest extends TestCase
 {
-    use DatabaseMigrations;
-
     private JwtGuard $guard;
 
     public function setUp(): void
@@ -98,8 +94,8 @@ class JwtGuardTest extends TestCase
         $this->guard->setUser($user);
 
         $this->assertEquals(
-            $user->toArray(),
-            $this->guard->user()->toArray()
+            $user->jsonSerialize(),
+            $this->guard->user()->jsonSerialize()
         );
     }
 
@@ -123,8 +119,8 @@ class JwtGuardTest extends TestCase
         );
 
         $this->assertEquals(
-            $user->toArray(),
-            $guard->user()->toArray()
+            $user->jsonSerialize(),
+            $guard->user()->jsonSerialize()
         );
     }
 

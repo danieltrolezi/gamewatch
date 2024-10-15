@@ -27,7 +27,7 @@ class RegisterAccountRequest extends FormRequest
             'email'           => ['required', 'email', new Unique('users', 'email')],
             'password'        => 'required|string|min:6|max:18',
             'discord'         => 'sometimes|array',
-            'discord.user_id' => 'required|string'
+            'discord.user_id' => 'sometimes|string'
         ];
     }
 }

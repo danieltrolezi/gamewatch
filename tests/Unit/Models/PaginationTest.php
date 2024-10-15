@@ -29,7 +29,7 @@ class PaginationTest extends TestCase
         }
 
         $Pagination = new Pagination($games, $pageSize, $currentPage, $total);
-        $contents = $Pagination->getContents();
+        $contents = $Pagination->jsonSerialize();
 
         $this->assertEquals($total, $contents['total']);
         $this->assertEquals($pageSize, $contents['page_size']);

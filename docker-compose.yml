@@ -18,11 +18,11 @@ services:
     depends_on:
       firestore:
         condition: service_healthy
-    #healthcheck:
-    #  test: ["CMD", "curl", "-f", "http://localhost/api/up"]
-    #  interval: 5s
-    #  timeout: 10s
-    #  retries: 5
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api/up"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     networks:
       - bridge
   

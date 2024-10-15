@@ -9,13 +9,10 @@ use App\Enums\Rawg\RawgGenre;
 use App\Enums\Scope;
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class UserRepositoryTest extends TestCase
 {
-    use DatabaseMigrations;
-
     private UserRepository $repository;
 
     public function setUp(): void
@@ -29,24 +26,20 @@ class UserRepositoryTest extends TestCase
         $user = $this->repository->create([
             'name'     => 'Test User',
             'email'    => 'test@example.com',
-            'password' => 'password',
+            'password' => $this->faker->password(),
         ]);
 
         $this->assertInstanceOf(User::class, $user);
 
         $this->assertDatabaseHas('users', [
-            'id'    => $user->id,
-            'name'  => $user->name,
-            'email' => $user->email,
-            'scopes' => json_encode([Scope::Default->value])
-        ]);
-
-        $this->assertDatabaseHas('user_settings', [
-            'user_id'   => $user->id,
-            'platforms' => json_encode(Platform::values()),
-            'genres'    => json_encode(RawgGenre::values()),
-            'period'    => Period::Next_30_Days->value,
-            'frequency' => Frequency::Monthly->value
+            'id'                 => $user->id,
+            'name'               => $user->name,
+            'email'              => $user->email,
+            'scopes'             => [Scope::Default->value],
+            'settings.platforms' => Platform::values(),
+            'settings.genres'    => RawgGenre::values(),
+            'settings.period'    => Period::Next_30_Days->value,
+            'settings.frequency' => Frequency::Monthly->value
         ]);
     }
 
@@ -82,13 +75,15 @@ class UserRepositoryTest extends TestCase
         $user = $this->createUser();
         $platforms = [Platform::PC->value];
 
-        $result = $this->repository->updateSettings($user, [
-            'platforms' => $platforms
+        $result = $this->repository->update($user, [
+            'settings' => [
+                'platforms' => $platforms
+            ]
         ]);
 
-        $this->assertDatabaseHas('user_settings', [
-            'user_id'   => $user->id,
-            'platforms' => json_encode($platforms)
+        $this->assertDatabaseHas('users', [
+            'id'                 => $user->id,
+            'settings.platforms' => $platforms
         ]);
 
         $this->assertInstanceOf(User::class, $result);

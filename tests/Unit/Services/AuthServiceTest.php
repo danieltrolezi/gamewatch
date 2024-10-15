@@ -9,7 +9,6 @@ use App\Services\AuthService;
 use Firebase\JWT\JWT;
 use Firebase\JWT\SignatureInvalidException;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -18,8 +17,6 @@ use UnexpectedValueException;
 
 class AuthServiceTest extends TestCase
 {
-    use DatabaseMigrations;
-
     private AuthService $service;
 
     public function setUp(): void

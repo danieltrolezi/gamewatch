@@ -5,12 +5,14 @@ namespace App\Models;
 use App\Enums\Scope;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AutenticatableTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema()]
 class User extends Firestore implements Authenticatable
 {
     use AutenticatableTrait;
+    use HasFactory;
 
     #[OA\Property(property: 'id', type: 'string')]
     #[OA\Property(property: 'name', type: 'string')]
