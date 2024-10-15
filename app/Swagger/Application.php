@@ -47,28 +47,4 @@ class Application
     public function tags()
     {
     }
-
-    #[OA\Get(
-        path: '/up',
-        tags: ['application'],
-        security: [],
-        responses: [
-            new OA\Response(response: 200, description: 'OK')
-        ]
-    )]
-    public function up()
-    {
-    }
-
-    #[OA\Get(
-        path: '/api/up',
-        tags: ['application'],
-        security: [],
-        responses: [
-            new OA\Response(response: 200, description: 'OK')
-        ]
-    )]
-    public function apiUp()
-    {
-    }
 }

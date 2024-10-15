@@ -8,10 +8,6 @@ use OpenApi\Attributes as OA;
 #[OA\Schema()]
 class Pagination extends Model
 {
-    public readonly int $lastPage;
-    public readonly string $nextPageUrl;
-    public readonly string $prevPageUrl;
-
     #[OA\Property(property: 'total', type: 'integer')]
     #[OA\Property(property: 'page_size', type: 'integer')]
     #[OA\Property(property: 'current_page', type: 'integer')]
@@ -24,6 +20,11 @@ class Pagination extends Model
             new OA\Schema(ref: '#/components/schemas/Game'),
         ]
     ))]
+
+    public readonly int $lastPage;
+    public readonly string $nextPageUrl;
+    public readonly string $prevPageUrl;
+
     public function __construct(
         public readonly Collection $data,
         public readonly int $pageSize,

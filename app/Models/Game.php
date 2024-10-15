@@ -14,15 +14,6 @@ class Game extends Model
     use Fillable;
     use HasFactory;
 
-    public readonly int $id;
-    public readonly string $name;
-    public readonly string $slug;
-    public readonly ?string $backgroundImage;
-    public readonly ?DateTime $released;
-    public readonly ?array $platforms;
-    public readonly ?array $stores;
-    public readonly ?array $genres;
-
     #[OA\Property(property: 'id', type: 'integer')]
     #[OA\Property(property: 'name', type: 'string')]
     #[OA\Property(property: 'slug', type: 'string')]
@@ -47,6 +38,16 @@ class Game extends Model
     ))]
     #[OA\Property(property: 'stores', type: 'array', items: new OA\Items(type: 'object'))]
     #[OA\Property(property: 'genres', type: 'array', items: new OA\Items(type: 'object'))]
+
+    public readonly int $id;
+    public readonly string $name;
+    public readonly string $slug;
+    public readonly ?string $backgroundImage;
+    public readonly ?DateTime $released;
+    public readonly ?array $platforms;
+    public readonly ?array $stores;
+    public readonly ?array $genres;
+
     public function __construct(array $data)
     {
         $this->validateData($data);

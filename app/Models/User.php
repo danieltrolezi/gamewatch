@@ -12,46 +12,52 @@ class User extends Firestore implements Authenticatable
 {
     use AutenticatableTrait;
 
-    // @TODO Test Swagger
-    #[OA\Property(property: 'id', type: 'integer')]
+    #[OA\Property(property: 'id', type: 'string')]
     #[OA\Property(property: 'name', type: 'string')]
     #[OA\Property(property: 'email', type: 'string')]
-    #[OA\Property(property: 'discord_user_id', type: 'string')]
-    #[OA\Property(property: 'discord_username', type: 'string')]
-    #[OA\Property(property: 'discord_channel_id', type: 'string')]
+    #[OA\Property(
+        property: 'discord',
+        type: 'object',
+        properties: [
+            new OA\Property(property: 'user_id', type: 'string'),
+            new OA\Property(property: 'username', type: 'string'),
+            new OA\Property(property: 'channel_id', type: 'string'),
+        ]
+    )]
+    #[OA\Property(
+        property: 'settings',
+        type: 'object',
+        properties: [
+            new OA\Property(
+                property: 'platforms',
+                type: 'array',
+                items: new OA\Items(
+                    type: 'string',
+                    enum: 'App\Enums\Platform'
+                ),
+            ),
+            new OA\Property(
+                property: 'genres',
+                type: 'array',
+                items: new OA\Items(
+                    type: 'string',
+                    enum: 'App\Enums\Rawg\RawgGenre'
+                ),
+            ),
+            new OA\Property(
+                property: 'period',
+                type: 'string',
+                enum: 'App\Enums\Period'
+            ),
+            new OA\Property(
+                property: 'frequency',
+                type: 'string',
+                enum: 'App\Enums\Frequency'
+            )
+        ]
+    )]
     #[OA\Property(property: 'created_at', type: 'datetime')]
     #[OA\Property(property: 'updated_at', type: 'datetime')]
-
-    #[OA\Property(property: 'settings', ref: '#/components/schemas/UserSetting')]
-
-    #[OA\Property(property: 'id', type: 'integer')]
-    #[OA\Property(property: 'user_id', type: 'integer')]
-    #[OA\Property(
-        property: 'platforms',
-        type: 'array',
-        items: new OA\Items(
-            type: 'string',
-            enum: 'App\Enums\Platform'
-        ),
-    )]
-    #[OA\Property(
-        property: 'genres',
-        type: 'array',
-        items: new OA\Items(
-            type: 'string',
-            enum: 'App\Enums\Rawg\RawgGenre'
-        ),
-    )]
-    #[OA\Property(
-        property: 'period',
-        type: 'string',
-        enum: 'App\Enums\Period'
-    )]
-    #[OA\Property(
-        property: 'frequency',
-        type: 'string',
-        enum: 'App\Enums\Frequency'
-    )]
 
     public string $name;
     public string $email;
