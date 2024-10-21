@@ -16,7 +16,7 @@ RUN if [ "$APP_ENV" = "local" ]; then \
     fi
 
 RUN if [ "$APP_ENV" = "production" ]; then \
-        composer install --no-interaction --optimize-autoloader --no-dev \
+        composer install --no-interaction --optimize-autoloader --no-dev --prefer-dist \
         && find /var/www/gamewatch -not -path "/var/www/gamewatch/vendor/*" -type f -exec chmod 644 {} \; \
         && find /var/www/gamewatch -type d -exec chmod 755 {} \; \
         && chown -R www-data:www-data /var/www/gamewatch \
