@@ -31,8 +31,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.firestore
-      args:
-        FIRESTORE_PROJECT_ID: ${FIRESTORE_PROJECT_ID}
     ports:
       - '8080:8080'
       - '4000:4000'

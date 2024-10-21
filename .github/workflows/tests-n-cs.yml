@@ -25,6 +25,7 @@ jobs:
         cp .env.example .env
         sed -i 's/REDIS_HOST=.*/REDIS_HOST=localhost/' .env
         sed -i 's/REDIS_PASSWORD=.*/REDIS_PASSWORD=null/' .env
+        sed -i 's/FIRESTORE_EMULATOR_HOST=.*/FIRESTORE_EMULATOR_HOST=localhost:8080/' .env
     
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
@@ -38,12 +39,25 @@ jobs:
     - name: Run Code Sniffer
       run: composer phpcs
 
-    - name: Wait for Redis
+    - name: Install Firestore Emulator
+      run: |
+        apk add --no-cache openjdk11 && npm install -g firebase-tools
+        cp ./docker/firebase /firebase
+        cd /firebase
+
+    - name: Start Firestore Emulator
+      run: emulators:start --only firestore --project ${{ vars.GCP_PROJECT_ID }}
+
+    - name: Wait for Redis and Firestore
       run: sleep 10
 
     - name: Check Redis Connectivity
       run: |
         nc -zv localhost 6379
+
+    - name: Check Firestore Connectivity
+      run: |
+        nc -zv localhost 8080
             
     - name: Run Tests
       run: composer test
