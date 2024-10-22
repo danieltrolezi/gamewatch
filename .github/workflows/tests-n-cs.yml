@@ -18,29 +18,12 @@ jobs:
       with:
         php-version: '8.3'
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 18
-
-    - name: Install OpenJDK 11
-      run: |
-        sudo apt update
-        sudo apt install -y openjdk-11-jdk
-
-    - name: Install Firebase Tools
-      run: sudo npm install -g firebase-tools
+    - uses: ./.github/workflows/setup-firestore.yml
     
     - uses: actions/checkout@v4
 
-    - name: Start Firestore Emulator
-      run: |
-        cd ./docker/firebase
-        firebase emulators:start --only firestore --project ${{ vars.GCP_PROJECT_ID }}
-        cd ../..
-
     - name: Create .env file
       run: |
-        cd ../..
         touch .env
         cp .env.example .env
         sed -i 's/REDIS_HOST=.*/REDIS_HOST=localhost/' .env
