@@ -26,3 +26,4 @@ jobs:
       run: |
         cd ./docker/firebase
         firebase emulators:start --only firestore --project ${{ vars.GCP_PROJECT_ID }} &
+        cc ../..

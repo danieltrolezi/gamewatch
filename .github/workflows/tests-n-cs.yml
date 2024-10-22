@@ -14,13 +14,13 @@ jobs:
           - 6379:6379
     
     steps:
+    - uses: actions/checkout@v4
+
     - uses: shivammathur/setup-php@v2
       with:
         php-version: '8.3'
 
     - uses: ./.github/workflows/setup-firestore.yml
-    
-    - uses: actions/checkout@v4
 
     - name: Create .env file
       run: |
