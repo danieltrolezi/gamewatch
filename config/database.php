@@ -110,7 +110,7 @@ return [
         ],
 
         'firestore' => [
-            'project_id' => env('FIRESTORE_PROJECT_ID', 'codelab92'),
+            'project_id' => env('FIRESTORE_PROJECT_ID'),
             'database' => env('FIRESTORE_DATABASE', 'gamewatch')
         ]
      ],

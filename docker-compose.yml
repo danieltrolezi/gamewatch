@@ -28,16 +28,15 @@ services:
   
   firestore:
     container_name: firestore
-    build:
-      context: .
-      dockerfile: Dockerfile.firestore
+    image: danieltrolezi/firestore:latest
     ports:
       - '8080:8080'
       - '4000:4000'
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/firebase/credentials.json
+      - FIRESTORE_PROJECT_ID=${FIRESTORE_PROJECT_ID}
     volumes:
-      - './docker/firebase:/firebase'
+      - './docker/firebase/credentials.json:/firebase/credentials.json'
     healthcheck:
       test: ["CMD", "wget", "--spider", "http://localhost:8080"]
       interval: 30s

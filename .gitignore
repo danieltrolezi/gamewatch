@@ -1,5 +1,4 @@
-docker/firebase/credentials.json
-docker/firebase/*.log
+docker/firebase/*
 node_modules
 public/coverage
 vendor
