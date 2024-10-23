@@ -1,4 +1,4 @@
-FROM southamerica-east1-docker.pkg.dev/codelab92/php/8.3-swoole:latest
+FROM danieltrolezi/php:8.3-swoole
 
 ARG APP_ENV=production
 ENV APP_ENV=${APP_ENV}

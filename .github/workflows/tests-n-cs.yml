@@ -18,15 +18,13 @@ jobs:
         ports: 
           - 8080:8080
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
           FIRESTORE_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+
+    container:
+      image: danieltrolezi/php:8.3-swoole
     
     steps:
     - uses: actions/checkout@v4
-
-    - uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.3'
 
     - name: Create .env file
       run: |
