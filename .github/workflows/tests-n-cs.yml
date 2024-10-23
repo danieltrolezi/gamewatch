@@ -21,7 +21,7 @@ jobs:
         php-version: '8.3'
 
     - name: Start Firebase Emulator
-      uses: w9jds/firebase-action@master
+      uses: w9jds/firebase-action@v13.22.1
       with:
         args: emulators:start --only firestore --project ${{ vars.GCP_PROJECT_ID }}
       env:
