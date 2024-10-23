@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Unique;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterAccountRequest extends FormRequest
@@ -22,9 +23,11 @@ class RegisterAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'     => 'required|string|min:5|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|max:18'
+            'name'            => 'required|string|min:5|max:255',
+            'email'           => ['required', 'email', new Unique('users', 'email')],
+            'password'        => 'required|string|min:6|max:18',
+            'discord'         => 'sometimes|array',
+            'discord.user_id' => 'sometimes|string'
         ];
     }
 }

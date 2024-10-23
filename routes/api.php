@@ -7,14 +7,16 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\RedisController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DiscordController;
+use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\RawgGamesController;
 use App\Http\Controllers\RawgDomainController;
 use Illuminate\Support\Facades\Route;
-use Spatie\Health\Http\Controllers\HealthCheckJsonResultsController;
 
-Route::get('/up', HealthCheckJsonResultsController::class);
+Route::middleware('firewall')->group(function () {
+    Route::get('/up', HealthCheckController::class);
 
-Route::permanentRedirect('/docs', '/swagger/index.html');
+    Route::permanentRedirect('/docs', '/swagger/index.html');
+});
 
 Route::prefix('discord')
     ->middleware(['discord.sign', 'throttle:discord'])
@@ -24,13 +26,14 @@ Route::prefix('discord')
     });
 
 Route::middleware('throttle:api')->group(function () {
-    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::middleware('firewall')->group(function () {
+        Route::post('/auth/login', [AuthController::class, 'login']);
+    });
 
     Route::middleware(['auth', 'scopes:' . Scope::Default->value])->group(function () {
         Route::prefix('account')->controller(AccountController::class)->group(function () {
             Route::get('/show', 'show');
             Route::put('/update', 'update');
-            Route::put('/settings', 'settings');
         });
 
         Route::middleware('scopes:' . Scope::Root->value)->group(function () {

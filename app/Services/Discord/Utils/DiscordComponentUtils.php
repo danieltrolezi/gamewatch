@@ -4,7 +4,7 @@ namespace App\Services\Discord\Utils;
 
 use App\Enums\Discord\ButtonStyle;
 use App\Enums\Discord\ComponentType;
-use App\Models\PaginatedResponse;
+use App\Models\Pagination;
 use App\Services\Discord\Commands\Contracts\CallbackCommandInterface;
 use Illuminate\Support\Str;
 
@@ -124,11 +124,11 @@ trait DiscordComponentUtils
     }
 
     /**
-     * @param PaginatedResponse $response
+     * @param Pagination $response
      * @return array
      */
     private function makePaginationComponents(
-        PaginatedResponse $response,
+        Pagination $response,
         array $args = []
     ): array {
         return [

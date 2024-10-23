@@ -6,7 +6,7 @@ use App\Services\Discord\DiscordAppService;
 use Closure;
 use Illuminate\Http\Request;
 
-class VerifyDiscordSignature
+class VerifyDiscordSignatureMiddleware
 {
     /**
      * Handle an incoming request.

@@ -56,7 +56,7 @@ class RawgGamesController extends Controller
                 response: 200,
                 description: 'List of RAWG games',
                 content: new OA\JsonContent(
-                    ref: '#/components/schemas/PaginatedResponse'
+                    ref: '#/components/schemas/Pagination'
                 )
             )
         ]
@@ -65,7 +65,7 @@ class RawgGamesController extends Controller
     {
         $response = $this->rawgGamesService->getRecommendations($genre, $request->validated());
 
-        return response()->json($response->getContents());
+        return response()->json($response);
     }
 
     /**
@@ -122,7 +122,7 @@ class RawgGamesController extends Controller
                 response: 200,
                 description: 'List of RAWG games',
                 content: new OA\JsonContent(
-                    ref: '#/components/schemas/PaginatedResponse'
+                    ref: '#/components/schemas/Pagination'
                 )
             )
         ]
@@ -131,7 +131,7 @@ class RawgGamesController extends Controller
     {
         $response = $this->rawgGamesService->getUpcomingReleases($period, $request->validated());
 
-        return response()->json($response->getContents());
+        return response()->json($response);
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Repositories\UserRepository;
-use App\Services\Discord\Commands\ReleasesCommand;
 use App\Services\Discord\DiscordAppService;
 use Illuminate\Console\Command;
 

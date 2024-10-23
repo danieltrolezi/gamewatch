@@ -39,6 +39,10 @@ paths:
                   type: string
                   format: password
                   nullable: false
+                discord:
+                  properties: { user_id: { type: string } }
+                  type: object
+                  nullable: true
               type: object
       responses:
         '201':
@@ -71,43 +75,9 @@ paths:
                   type: string
                   format: password
                   nullable: true
-                discord_user_id:
-                  type: string
-                  nullable: true
-              type: object
-      responses:
-        '200':
-          description: 'Account data'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-  /api/account/settings:
-    put:
-      tags:
-        - account
-      operationId: 2eacf149a4144a183a782362f4140e28
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              properties:
-                platforms:
-                  type: array
-                  items: { type: string, enum: [pc, playstation5, xbox-series-x, switch, linux, android, ios] }
-                  nullable: true
-                genres:
-                  type: array
-                  items: { type: string, enum: [racing, shooter, adventure, action, rpg, fighting, puzzle, strategy, arcade, simulation, sports, card, family, board-games, educational, casual, indie, massively-multiplayer, platformer] }
-                  nullable: true
-                period:
-                  type: string
-                  enum: [next-7-days, next-30-days, next-12-months]
-                  nullable: true
-                frequency:
-                  type: string
-                  enum: [none, daily, weekly, monthly]
+                settings:
+                  properties: { platforms: { type: array, items: { type: string, enum: [pc, playstation5, xbox-series-x, switch, linux, android, ios] }, nullable: true }, genres: { type: array, items: { type: string, enum: [racing, shooter, adventure, action, rpg, fighting, puzzle, strategy, arcade, simulation, sports, card, family, board-games, educational, casual, indie, massively-multiplayer, platformer] }, nullable: true }, period: { type: string, enum: [next-7-days, next-30-days, next-12-months], nullable: true }, frequency: { type: string, enum: [none, daily, weekly, monthly], nullable: true } }
+                  type: object
                   nullable: true
               type: object
       responses:
@@ -145,6 +115,15 @@ paths:
       responses:
         '200':
           description: JWT
+      security: []
+  /api/up:
+    get:
+      tags:
+        - application
+      operationId: 989376d0f5458c35126991789a4c705b
+      responses:
+        '200':
+          description: OK
       security: []
   /api/rawg/domain/genres:
     get:
@@ -219,7 +198,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedResponse'
+                $ref: '#/components/schemas/Pagination'
   '/api/rawg/games/upcoming-releases/{period}':
     get:
       tags:
@@ -299,7 +278,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedResponse'
+                $ref: '#/components/schemas/Pagination'
   '/api/rawg/games/{game}/achievements':
     get:
       tags:
@@ -339,24 +318,6 @@ paths:
                 items:
                   properties: { id: { type: integer }, name: { type: string }, description: { type: string }, image: { type: string }, percent: { type: string } }
                   type: object
-  /up:
-    get:
-      tags:
-        - application
-      operationId: babf1c1e7a1e559b1836be5e2e457254
-      responses:
-        '200':
-          description: OK
-      security: []
-  /api/up:
-    get:
-      tags:
-        - application
-      operationId: 0209dbce81fba7988605af0dd5da1f73
-      responses:
-        '200':
-          description: OK
-      security: []
 components:
   schemas:
     Acknowledge:
@@ -501,19 +462,19 @@ components:
           items:
             type: object
       type: object
-    PaginatedResponse:
+    Pagination:
       properties:
         total:
           type: integer
-        pageSize:
+        page_size:
           type: integer
-        currentPage:
+        current_page:
           type: integer
-        lastPage:
+        last_page:
           type: integer
-        nextPageUrl:
+        next_page_url:
           type: string
-        prevPageUrl:
+        prev_page_url:
           type: string
         data:
           type: array
@@ -525,81 +486,78 @@ components:
     User:
       properties:
         id:
-          type: integer
+          type: string
         name:
           type: string
         email:
           type: string
-        discord_user_id:
-          type: string
-        discord_username:
-          type: string
-        discord_channel_id:
-          type: string
+        discord:
+          properties:
+            user_id:
+              type: string
+            username:
+              type: string
+            channel_id:
+              type: string
+          type: object
+        settings:
+          properties:
+            platforms:
+              type: array
+              items:
+                type: string
+                enum:
+                  - pc
+                  - playstation5
+                  - xbox-series-x
+                  - switch
+                  - linux
+                  - android
+                  - ios
+            genres:
+              type: array
+              items:
+                type: string
+                enum:
+                  - racing
+                  - shooter
+                  - adventure
+                  - action
+                  - rpg
+                  - fighting
+                  - puzzle
+                  - strategy
+                  - arcade
+                  - simulation
+                  - sports
+                  - card
+                  - family
+                  - board-games
+                  - educational
+                  - casual
+                  - indie
+                  - massively-multiplayer
+                  - platformer
+            period:
+              type: string
+              enum:
+                - next-7-days
+                - next-30-days
+                - next-12-months
+            frequency:
+              type: string
+              enum:
+                - none
+                - daily
+                - weekly
+                - monthly
+          type: object
         created_at:
           type: string
           format: date-time
         updated_at:
           type: string
           format: date-time
-        settings:
-          $ref: '#/components/schemas/UserSetting'
-      type: object
-    UserSetting:
-      properties:
-        id:
-          type: integer
-        user_id:
-          type: integer
-        platforms:
-          type: array
-          items:
-            type: string
-            enum:
-              - pc
-              - playstation5
-              - xbox-series-x
-              - switch
-              - linux
-              - android
-              - ios
-        genres:
-          type: array
-          items:
-            type: string
-            enum:
-              - racing
-              - shooter
-              - adventure
-              - action
-              - rpg
-              - fighting
-              - puzzle
-              - strategy
-              - arcade
-              - simulation
-              - sports
-              - card
-              - family
-              - board-games
-              - educational
-              - casual
-              - indie
-              - massively-multiplayer
-              - platformer
-        period:
-          type: string
-          enum:
-            - next-7-days
-            - next-30-days
-            - next-12-months
-        frequency:
-          type: string
-          enum:
-            - none
-            - daily
-            - weekly
-            - monthly
       type: object
   securitySchemes:
     bearerAuth:

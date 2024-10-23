@@ -2,24 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Utils\Fillable;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Validator;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema()]
-class Game
+class Game extends Model
 {
+    use Fillable;
     use HasFactory;
-
-    public readonly int $id;
-    public readonly string $name;
-    public readonly string $slug;
-    public readonly ?string $background_image;
-    public readonly ?DateTime $released;
-    public readonly ?array $platforms;
-    public readonly ?array $stores;
-    public readonly ?array $genres;
 
     #[OA\Property(property: 'id', type: 'integer')]
     #[OA\Property(property: 'name', type: 'string')]
@@ -45,10 +38,20 @@ class Game
     ))]
     #[OA\Property(property: 'stores', type: 'array', items: new OA\Items(type: 'object'))]
     #[OA\Property(property: 'genres', type: 'array', items: new OA\Items(type: 'object'))]
+
+    public readonly int $id;
+    public readonly string $name;
+    public readonly string $slug;
+    public readonly ?string $backgroundImage;
+    public readonly ?DateTime $released;
+    public readonly ?array $platforms;
+    public readonly ?array $stores;
+    public readonly ?array $genres;
+
     public function __construct(array $data)
     {
         $this->validateData($data);
-        $this->setData($data);
+        parent::__construct($data);
     }
 
     private function validateData(array $data): void
@@ -74,12 +77,5 @@ class Game
         ]);
 
         $validator->validate();
-    }
-
-    private function setData(array $data): void
-    {
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Services\Discord\Commands;
 
-use App\Models\PaginatedResponse;
+use App\Models\Pagination;
 use App\Models\User;
 use App\Services\Discord\Commands\Contracts\CallbackCommandInterface;
 use App\Services\Discord\Utils\DiscordComponentUtils;
@@ -57,14 +57,14 @@ class ReleasesCommand extends BaseCommand implements CallbackCommandInterface
         $period = Arr::get(
             $payload,
             'data.options.0.value',
-            $this->user->settings->period->value
+            $this->user->settings['period']
         );
 
         $response = $this->rawgGamesService->getUpcomingReleases(
             period: $period,
             filters: [
-                'platforms' => implode(',', $this->user->settings->platforms),
-                'genres'    => implode(',', $this->user->settings->genres),
+                'platforms' => implode(',', $this->user->settings['platforms']),
+                'genres'    => implode(',', $this->user->settings['genres']),
                 'page'      => $page,
                 'page_size' => 10,
             ]
@@ -79,13 +79,13 @@ class ReleasesCommand extends BaseCommand implements CallbackCommandInterface
      */
     public function makeNotificationForUser(User $user): array
     {
-        $period = $user->settings->period->value;
+        $period = $user->settings['period'];
 
         $response = $this->rawgGamesService->getUpcomingReleases(
             period: $period,
             filters: [
-                'platforms' => implode(',', $user->settings->platforms),
-                'genres'    => implode(',', $user->settings->genres),
+                'platforms' => implode(',', $user->settings['platforms']),
+                'genres'    => implode(',', $user->settings['genres']),
                 'page_size' => 10,
             ]
         );
@@ -98,11 +98,11 @@ class ReleasesCommand extends BaseCommand implements CallbackCommandInterface
     }
 
     /**
-     * @param PaginatedResponse $response
+     * @param Pagination $response
      * @param string $period
      * @return array
      */
-    private function makeResponse(PaginatedResponse $response, string $period): array
+    private function makeResponse(Pagination $response, string $period): array
     {
         $friendlyPeriod = str_replace('-', ' ', $period);
 
@@ -126,10 +126,10 @@ class ReleasesCommand extends BaseCommand implements CallbackCommandInterface
     }
 
     /**
-     * @param PaginatedResponse $response
+     * @param Pagination $response
      * @return void
      */
-    private function makeGameEmbeds(PaginatedResponse $response)
+    private function makeGameEmbeds(Pagination $response)
     {
         $embeds = [];
 

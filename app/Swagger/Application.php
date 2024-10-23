@@ -44,31 +44,11 @@ class Application
         name: 'account',
         description: 'account management routes'
     )]
-    public function tags()
+    /**
+     * @return null
+     */
+    public function tags(): null
     {
-    }
-
-    #[OA\Get(
-        path: '/up',
-        tags: ['application'],
-        security: [],
-        responses: [
-            new OA\Response(response: 200, description: 'OK')
-        ]
-    )]
-    public function up()
-    {
-    }
-
-    #[OA\Get(
-        path: '/api/up',
-        tags: ['application'],
-        security: [],
-        responses: [
-            new OA\Response(response: 200, description: 'OK')
-        ]
-    )]
-    public function apiUp()
-    {
+        return null;
     }
 }

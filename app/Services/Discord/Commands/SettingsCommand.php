@@ -36,7 +36,7 @@ class SettingsCommand extends BaseCommand implements CallbackCommandInterface
                     $this->makeMenuComponent(
                         name: self::COMPONENT_PLATFORMS,
                         options: Platform::cases(),
-                        defaults: $this->user->settings->platforms
+                        defaults: $this->user->settings['platforms']
                     )
                 ]),
                 $this->makeActionRow([
@@ -64,7 +64,7 @@ class SettingsCommand extends BaseCommand implements CallbackCommandInterface
 
             try {
                 $this->validateSettings($values);
-                $userRepository->updateSettings($this->user, $values);
+                $userRepository->update($this->user, ['settings' => $values]);
             } catch (ValidationException $e) {
                 return $this->makeError($e);
             }
@@ -137,7 +137,7 @@ class SettingsCommand extends BaseCommand implements CallbackCommandInterface
                     $this->makeMenuComponent(
                         name: self::COMPONENT_GENRES,
                         options: RawgGenre::cases(),
-                        defaults: $this->user->settings->genres,
+                        defaults: $this->user->settings['genres'],
                     )
                 ]),
                 $this->makeActionRow([
@@ -162,7 +162,7 @@ class SettingsCommand extends BaseCommand implements CallbackCommandInterface
                     $this->makeMenuComponent(
                         name: self::COMPONENT_PERIOD,
                         options: Period::cases(),
-                        defaults: [$this->user->settings->period->value],
+                        defaults: [$this->user->settings['period']],
                         maxValues: 1
                     )
                 ]),
@@ -188,7 +188,7 @@ class SettingsCommand extends BaseCommand implements CallbackCommandInterface
                     $this->makeMenuComponent(
                         name: self::COMPONENT_FREQUENCY,
                         options: Frequency::cases(),
-                        defaults: [$this->user->settings->frequency->value],
+                        defaults: [$this->user->settings['frequency']],
                         maxValues: 1
                     )
                 ]),

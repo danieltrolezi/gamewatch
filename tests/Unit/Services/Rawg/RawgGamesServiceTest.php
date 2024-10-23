@@ -6,10 +6,9 @@ use App\Enums\Period;
 use App\Enums\Rawg\RawgField;
 use App\Enums\Rawg\RawgGenre;
 use App\Models\Game;
-use App\Models\PaginatedResponse;
+use App\Models\Pagination;
 use App\Services\Rawg\RawgFilterService;
 use App\Services\Rawg\RawgGamesService;
-use Illuminate\Support\Facades\Config;
 use Mockery;
 use Tests\TestCase;
 
@@ -59,8 +58,8 @@ class RawgGamesServiceTest extends TestCase
 
         $result = $service->getRecommendations($genre, $filters);
 
-        $this->assertInstanceOf(PaginatedResponse::class, $result);
-        $this->assertInstanceOf(Game::class, $result->getContents()['data']->first());
+        $this->assertInstanceOf(Pagination::class, $result);
+        $this->assertInstanceOf(Game::class, $result->jsonSerialize()['data']->first());
     }
 
     public function test_should_get_upcoming_releases()
@@ -87,7 +86,7 @@ class RawgGamesServiceTest extends TestCase
 
         $result = $service->getUpcomingReleases($period, $filters);
 
-        $this->assertInstanceOf(PaginatedResponse::class, $result);
-        $this->assertInstanceOf(Game::class, $result->getContents()['data']->first());
+        $this->assertInstanceOf(Pagination::class, $result);
+        $this->assertInstanceOf(Game::class, $result->jsonSerialize()['data']->first());
     }
 }

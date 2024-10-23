@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\PaginatedResponse;
+use App\Models\Pagination;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-class PaginatedResponseTest extends TestCase
+class PaginationTest extends TestCase
 {
     #[DataProvider('provider_contents_settings')]
     public function test_should_get_contents(
@@ -28,8 +28,8 @@ class PaginatedResponseTest extends TestCase
             $prevPageUrl = $url . '?' . http_build_query(['page' => $currentPage - 1]);
         }
 
-        $paginatedResponse = new PaginatedResponse($games, $pageSize, $currentPage, $total);
-        $contents = $paginatedResponse->getContents();
+        $Pagination = new Pagination($games, $pageSize, $currentPage, $total);
+        $contents = $Pagination->jsonSerialize();
 
         $this->assertEquals($total, $contents['total']);
         $this->assertEquals($pageSize, $contents['page_size']);

@@ -5,7 +5,7 @@ namespace App\Services\Rawg;
 use App\Enums\Period;
 use App\Enums\Rawg\RawgField;
 use App\Models\Game;
-use App\Models\PaginatedResponse;
+use App\Models\Pagination;
 use DateTime;
 use Illuminate\Support\Collection;
 
@@ -15,12 +15,12 @@ class RawgGamesService extends RawgBaseService
      * @param string $genre
      * @param integer|null $perPage
      * @param integer|null $page
-     * @return PaginatedResponse
+     * @return Pagination
      */
     public function getRecommendations(
         string $genre,
         array $filters = []
-    ): PaginatedResponse {
+    ): Pagination {
         $query = $this->filterService->getQueryFilters(filters: $filters, default: [
             RawgField::Dates->value    => date('Y-m-d', strtotime('-1 year')) . ',' . date('Y-m-d'),
             RawgField::Genres->value   => $genre,
@@ -33,7 +33,7 @@ class RawgGamesService extends RawgBaseService
             'query' => $query
         ]);
 
-        return new PaginatedResponse(
+        return new Pagination(
             $this->parseGames($response),
             $query[RawgField::PageSize->value],
             $query[RawgField::Page->value],
@@ -45,12 +45,12 @@ class RawgGamesService extends RawgBaseService
      * @param string $period
      * @param integer $perPage
      * @param integer $page
-     * @return PaginatedResponse
+     * @return Pagination
      */
     public function getUpcomingReleases(
         string $period = Period::Next_7_Days->value,
         array $filters = []
-    ): PaginatedResponse {
+    ): Pagination {
         $timeUnit = Period::getTimeUnit($period);
         $query = $this->filterService->getQueryFilters(filters: $filters, default: [
             RawgField::Dates->value    => date('Y-m-d') . ',' . date('Y-m-d', strtotime('+1 ' . $timeUnit)),
@@ -63,7 +63,7 @@ class RawgGamesService extends RawgBaseService
             'query' => $query
         ]);
 
-        return new PaginatedResponse(
+        return new Pagination(
             $this->parseGames($response),
             $query[RawgField::PageSize->value],
             $query[RawgField::Page->value],

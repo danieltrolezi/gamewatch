@@ -109,7 +109,11 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
-    ],
+        'firestore' => [
+            'project_id' => env('FIRESTORE_PROJECT_ID'),
+            'database' => env('FIRESTORE_DATABASE', 'gamewatch')
+        ]
+     ],
 
     /*
     |--------------------------------------------------------------------------

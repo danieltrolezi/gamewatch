@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Guards\JwtGuard;
+use App\Repositories\UserRepository;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Contracts\Foundation\Application;
@@ -14,11 +15,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Octane\Events\RequestHandled;
 use Laravel\Octane\Events\RequestReceived;
-use Spatie\Health\Checks\Checks\DatabaseCheck;
-use Spatie\Health\Checks\Checks\EnvironmentCheck;
-use Spatie\Health\Checks\Checks\RedisCheck;
-use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
-use Spatie\Health\Facades\Health;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,30 +31,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->setHealthCheck();
         $this->setJwtGuard();
         $this->setRateLimit();
         $this->setLogContext();
         $this->setRequestLogging();
     }
 
-    private function setHealthCheck(): void
-    {
-        $env = match (config('app.url')) {
-            'http://gamewatch.local' => 'local',
-            default                  => 'production'
-        };
-
-        Health::checks([
-            EnvironmentCheck::new()->expectEnvironment($env),
-            UsedDiskSpaceCheck::new(),
-            DatabaseCheck::new(),
-            RedisCheck::new()
-        ]);
-    }
-
     private function setJwtGuard(): void
     {
+        Auth::provider('firestore', function ($app, array $config) {
+            return new FirestoreUserProvider(
+                $app->make(UserRepository::class)
+            );
+        });
+
         Auth::extend('jwt', function (Application $app, string $name, array $config) {
             return new JwtGuard(
                 Auth::createUserProvider($config['provider']),
@@ -121,7 +107,7 @@ class AppServiceProvider extends ServiceProvider
             $protectedRoutes = ['/api/auth/login'];
 
             if (!in_array($event->request->getPathInfo(), $protectedRoutes)) {
-                $responseContent = strlen($event->response->getContent()) > 500
+                $responseContent = strlen($event->response->getContent()) > 120
                 ? substr($event->response->getContent(), 0, 120) . '...'
                 : $event->response->getContent();
             }
