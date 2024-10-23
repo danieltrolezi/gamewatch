@@ -36,7 +36,9 @@ jobs:
         sed -i 's/FIRESTORE_EMULATOR_HOST=.*/FIRESTORE_EMULATOR_HOST=localhost:8080/' .env
 
     - name: Diagnose Composer Issues
-      run: composer diagnose
+      run: |
+        composer self-update --update-keys
+        composer diagnose
     
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
